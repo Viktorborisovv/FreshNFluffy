@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    using static Common.EntityValidation.OrderRequest;
+    using static FreshNFluffy.Common.EntityValidation.OrderRequest;
     public class OrderRequest
     {
         public int OrderRequestId { get; set; }

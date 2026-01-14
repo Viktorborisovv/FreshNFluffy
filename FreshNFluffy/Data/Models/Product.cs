@@ -3,7 +3,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    using static Common.EntityValidation.Product;
+    using static FreshNFluffy.Common.EntityValidation.Product;
     public class Product
     {
         [Required]
