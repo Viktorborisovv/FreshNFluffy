@@ -4,6 +4,7 @@ using FreshNFluffy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FreshNFluffy.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260116192227_SeedProducts")]
+    partial class SeedProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,208 +190,6 @@ namespace FreshNFluffy.Data.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            ProductId = 1,
-                            CategoryId = 1,
-                            Description = "Rich chocolate sponge with fudge frosting.",
-                            ImageUrl = "https://example.com/img/chocolate-fudge-cake.jpg",
-                            Name = "Chocolate Fudge Cake",
-                            NutritionTypes = 0,
-                            Price = 29.90m
-                        },
-                        new
-                        {
-                            ProductId = 2,
-                            CategoryId = 1,
-                            Description = "Moist carrot cake with walnuts and cinnamon.",
-                            ImageUrl = "https://example.com/img/carrot-walnut-cake.jpg",
-                            Name = "Carrot Walnut Cake",
-                            NutritionTypes = 0,
-                            Price = 27.50m
-                        },
-                        new
-                        {
-                            ProductId = 3,
-                            CategoryId = 1,
-                            Description = "Plant-based chocolate cake, dairy-free.",
-                            ImageUrl = "https://example.com/img/vegan-chocolate-cake.jpg",
-                            Name = "Vegan Chocolate Cake",
-                            NutritionTypes = 12,
-                            Price = 30.90m
-                        },
-                        new
-                        {
-                            ProductId = 4,
-                            CategoryId = 2,
-                            Description = "Classic French croissant, flaky and buttery.",
-                            ImageUrl = "https://example.com/img/butter-croissant.jpg",
-                            Name = "Butter Croissant",
-                            NutritionTypes = 0,
-                            Price = 3.20m
-                        },
-                        new
-                        {
-                            ProductId = 5,
-                            CategoryId = 2,
-                            Description = "Croissant pastry filled with dark chocolate.",
-                            ImageUrl = "https://example.com/img/pain-au-chocolat.jpg",
-                            Name = "Pain au Chocolat",
-                            NutritionTypes = 0,
-                            Price = 3.80m
-                        },
-                        new
-                        {
-                            ProductId = 6,
-                            CategoryId = 2,
-                            Description = "Crispy puff pastry with spiced apples, vegan.",
-                            ImageUrl = "https://example.com/img/vegan-apple-turnover.jpg",
-                            Name = "Vegan Apple Turnover",
-                            NutritionTypes = 12,
-                            Price = 4.10m
-                        },
-                        new
-                        {
-                            ProductId = 7,
-                            CategoryId = 3,
-                            Description = "Naturally leavened sourdough bread.",
-                            ImageUrl = "https://example.com/img/sourdough-loaf.jpg",
-                            Name = "Sourdough Loaf",
-                            NutritionTypes = 0,
-                            Price = 6.50m
-                        },
-                        new
-                        {
-                            ProductId = 8,
-                            CategoryId = 3,
-                            Description = "Hearty wholegrain loaf, great for sandwiches.",
-                            ImageUrl = "https://example.com/img/wholegrain-bread.jpg",
-                            Name = "Wholegrain Bread",
-                            NutritionTypes = 0,
-                            Price = 5.90m
-                        },
-                        new
-                        {
-                            ProductId = 9,
-                            CategoryId = 3,
-                            Description = "Gluten-free loaf with mixed seeds.",
-                            ImageUrl = "https://example.com/img/gluten-free-seed-bread.jpg",
-                            Name = "Gluten-Free Seed Bread",
-                            NutritionTypes = 13,
-                            Price = 7.40m
-                        },
-                        new
-                        {
-                            ProductId = 10,
-                            CategoryId = 4,
-                            Description = "Soft cookies with dark chocolate chips.",
-                            ImageUrl = "https://example.com/img/choc-chip-cookies.jpg",
-                            Name = "Chocolate Chip Cookies",
-                            NutritionTypes = 0,
-                            Price = 6.90m
-                        },
-                        new
-                        {
-                            ProductId = 11,
-                            CategoryId = 4,
-                            Description = "Oat cookies with raisins and a hint of cinnamon.",
-                            ImageUrl = "https://example.com/img/oat-raisin-cookies.jpg",
-                            Name = "Oat & Raisin Cookies",
-                            NutritionTypes = 0,
-                            Price = 6.20m
-                        },
-                        new
-                        {
-                            ProductId = 12,
-                            CategoryId = 4,
-                            Description = "Crunchy almond cookies without added sugar.",
-                            ImageUrl = "https://example.com/img/sugar-free-almond-cookies.jpg",
-                            Name = "Sugar-Free Almond Cookies",
-                            NutritionTypes = 19,
-                            Price = 7.10m
-                        },
-                        new
-                        {
-                            ProductId = 13,
-                            CategoryId = 5,
-                            Description = "Creamy cheesecake with vanilla and biscuit base.",
-                            ImageUrl = "https://example.com/img/classic-cheesecake.jpg",
-                            Name = "Classic Cheesecake",
-                            NutritionTypes = 0,
-                            Price = 22.90m
-                        },
-                        new
-                        {
-                            ProductId = 14,
-                            CategoryId = 5,
-                            Description = "Low-carb cheesecake dessert cup.",
-                            ImageUrl = "https://example.com/img/keto-cheesecake-cup.jpg",
-                            Name = "Keto Cheesecake Cup",
-                            NutritionTypes = 19,
-                            Price = 8.90m
-                        },
-                        new
-                        {
-                            ProductId = 15,
-                            CategoryId = 5,
-                            Description = "Silky vegan mousse, dairy-free.",
-                            ImageUrl = "https://example.com/img/vegan-chocolate-mousse.jpg",
-                            Name = "Vegan Chocolate Mousse",
-                            NutritionTypes = 12,
-                            Price = 9.20m
-                        },
-                        new
-                        {
-                            ProductId = 16,
-                            CategoryId = 6,
-                            Description = "Soft vanilla scone, perfect with tea.",
-                            ImageUrl = "https://example.com/img/vanilla-scone.jpg",
-                            Name = "Vanilla Sweet Scone",
-                            NutritionTypes = 0,
-                            Price = 2.80m
-                        },
-                        new
-                        {
-                            ProductId = 17,
-                            CategoryId = 6,
-                            Description = "Buttery scone with blueberries.",
-                            ImageUrl = "https://example.com/img/blueberry-scone.jpg",
-                            Name = "Blueberry Sweet Scone",
-                            NutritionTypes = 0,
-                            Price = 3.10m
-                        },
-                        new
-                        {
-                            ProductId = 18,
-                            CategoryId = 7,
-                            Description = "Savory scone with cheddar cheese.",
-                            ImageUrl = "https://example.com/img/cheddar-scone.jpg",
-                            Name = "Cheddar Salty Scone",
-                            NutritionTypes = 0,
-                            Price = 3.40m
-                        },
-                        new
-                        {
-                            ProductId = 19,
-                            CategoryId = 7,
-                            Description = "Savory scone with olives and herbs.",
-                            ImageUrl = "https://example.com/img/olive-herb-scone.jpg",
-                            Name = "Olive & Herb Salty Scone",
-                            NutritionTypes = 0,
-                            Price = 3.60m
-                        },
-                        new
-                        {
-                            ProductId = 20,
-                            CategoryId = 7,
-                            Description = "Low-carb savory scone, keto friendly.",
-                            ImageUrl = "https://example.com/img/keto-salty-scone.jpg",
-                            Name = "Keto Salty Scone",
-                            NutritionTypes = 17,
-                            Price = 4.20m
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
