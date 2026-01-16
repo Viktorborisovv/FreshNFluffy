@@ -16,10 +16,23 @@
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<OrderRequest> OrderRequests { get; set; } = null!;
+        public virtual DbSet<OrderItem> OrderItems { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<OrderItem>()
+                .HasOne(oi => oi.OrderRequest)
+                .WithMany(or => or.Items)
+                .HasForeignKey(oi => oi.OrderRequestId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<OrderItem>()
+                .HasOne(oi => oi.Product)
+                .WithMany()
+                .HasForeignKey(oi => oi.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Category>().HasData(
             new Category

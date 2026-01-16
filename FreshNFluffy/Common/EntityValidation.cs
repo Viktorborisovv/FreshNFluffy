@@ -6,7 +6,7 @@
         {
             public const int ProductNameMinLength = 3;
             public const int ProductNameMaxLength = 35;
-            public const int DescriptionMinLength = 600;
+            public const int DescriptionMinLength = 15;
             public const int DescriptionMaxLength = 1000;
             public const int ProductImageUrlMaxLength = 2048;
             public const string PriceSqlType = "DECIMAL(9,2)";
@@ -25,6 +25,13 @@
             public const int PhoneNumberLength = 13;
             public const int NotesMinLength = 6;
             public const int NotesMaxLength = 450;
+        }
+
+        public static class OrderItem
+        {
+            public const string UnitPriceSqlType = "DECIMAL(9,2)";
+            public const int QuantityMin = 1;
+            public const int QuantityMax = 100;
         }
     }
 }

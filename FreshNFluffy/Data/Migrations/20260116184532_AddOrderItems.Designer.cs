@@ -4,6 +4,7 @@ using FreshNFluffy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FreshNFluffy.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260116184532_AddOrderItems")]
+    partial class AddOrderItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,35 +90,6 @@ namespace FreshNFluffy.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FreshNFluffy.Data.Models.OrderItem", b =>
-                {
-                    b.Property<int>("OrderItemId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderItemId"));
-
-                    b.Property<int>("OrderRequestId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("DECIMAL(9,2)");
-
-                    b.HasKey("OrderItemId");
-
-                    b.HasIndex("OrderRequestId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("OrderItems");
-                });
-
             modelBuilder.Entity("FreshNFluffy.Data.Models.OrderRequest", b =>
                 {
                     b.Property<int>("OrderRequestId")
@@ -143,9 +117,6 @@ namespace FreshNFluffy.Data.Migrations
 
                     b.Property<DateTime>("PickupDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.HasKey("OrderRequestId");
 
@@ -391,25 +362,6 @@ namespace FreshNFluffy.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("FreshNFluffy.Data.Models.OrderItem", b =>
-                {
-                    b.HasOne("FreshNFluffy.Data.Models.OrderRequest", "OrderRequest")
-                        .WithMany("Items")
-                        .HasForeignKey("OrderRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FreshNFluffy.Data.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("OrderRequest");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("FreshNFluffy.Data.Models.Product", b =>
                 {
                     b.HasOne("FreshNFluffy.Data.Models.Category", "Category")
@@ -475,11 +427,6 @@ namespace FreshNFluffy.Data.Migrations
             modelBuilder.Entity("FreshNFluffy.Data.Models.Category", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("FreshNFluffy.Data.Models.OrderRequest", b =>
-                {
-                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

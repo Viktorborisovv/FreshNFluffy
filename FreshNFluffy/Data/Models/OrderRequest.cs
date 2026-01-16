@@ -1,5 +1,6 @@
 ﻿namespace FreshNFluffy.Data.Models
 {
+    using FreshNFluffy.Data.Models.Enum;
     using System.ComponentModel.DataAnnotations;
 
     using static FreshNFluffy.Common.EntityValidation.OrderRequest;
@@ -22,5 +23,10 @@
         public string? Notes { get; set; }
 
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+
+        public OrderStatus Status { get; set; } = OrderStatus.Pending;
+
+        public virtual ICollection<OrderItem> Items { get; set; } =
+            new HashSet<OrderItem>();
     }
 }
