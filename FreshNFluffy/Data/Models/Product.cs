@@ -6,7 +6,6 @@
     using static FreshNFluffy.Common.EntityValidation.Product;
     public class Product
     {
-        [Required]
         public int ProductId { get; set; }
 
         [Required]
