@@ -6,8 +6,9 @@
         {
             public const int ProductNameMinLength = 3;
             public const int ProductNameMaxLength = 35;
-            public const int DescriptionMinLength = 20;
-            public const int DescriptionMaxLength = 100;
+            public const int DescriptionMinLength = 600;
+            public const int DescriptionMaxLength = 1000;
+            public const int ProductImageUrlMaxLength = 2048;
             public const string PriceSqlType = "DECIMAL(9,2)";
         }
 
