@@ -5,6 +5,9 @@ namespace FreshNFluffy
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
+    using FreshNFluffy.Services;
+    using FreshNFluffy.Services.Interfaces;
+
     public class Program
     {
         public static void Main(string[] args)
@@ -20,6 +23,8 @@ namespace FreshNFluffy
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddScoped<IProductService, ProductService>();
 
             var app = builder.Build();
 

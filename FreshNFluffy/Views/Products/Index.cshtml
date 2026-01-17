@@ -1,0 +1,73 @@
+﻿@model FreshNFluffy.ViewModels.Products.ProductQueryViewModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using FreshNFluffy.ViewModels.Categories
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<h2 class="mb-3">Products</h2>
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-4">
+        <input class="form-control" asp-for="Search" placeholder="Search by name or description..." />
+    </div>
+
+    <div class="col-md-3">
+        <select class="form-select" asp-for="CategoryId"
+                asp-items="@(new SelectList(Model.Categories, nameof(CategorySelectViewModel.CategoryId), nameof(CategorySelectViewModel.Name)))">
+            <option value="">All categories</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <select class="form-select" asp-for="NutritionTypes">
+            <option value="">All nutrition</option>
+            <option value="1">Gluten Free</option>
+            <option value="2">Sugar Free</option>
+            <option value="4">Lactose Free</option>
+            <option value="8">Vegan</option>
+            <option value="16">Keto</option>
+
+            <option value="3">Gluten + Sugar Free</option>
+            <option value="12">Lactose Free + Vegan</option>
+            <option value="19">Gluten + Sugar Free + Keto</option>
+        </select>
+        <small class="text-muted">Tip: combos work too</small>
+    </div>
+
+    <div class="col-md-2">
+        <button class="btn btn-primary w-100" type="submit">Filter</button>
+    </div>
+</form>
+
+@if (!Model.Products.Any())
+{
+    <div class="alert alert-info">No products found.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-3 g-3">
+        @foreach (var p in Model.Products)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    @if (!string.IsNullOrWhiteSpace(p.ImageUrl))
+                    {
+                        <img src="@p.ImageUrl" class="card-img-top" alt="@p.Name"/>
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@p.Name</h5>
+                        <p class="card-text mb-1"><strong>@p.Price.ToString("0.00")</strong> BGN</p>
+                        <p class="card-text text-muted mb-2">@p.CategoryName</p>
+
+                        <a asp-controller="Products" asp-action="Details" asp-route-id="@p.ProductId"
+                           class="btn btn-outline-primary btn-sm">
+                            Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
