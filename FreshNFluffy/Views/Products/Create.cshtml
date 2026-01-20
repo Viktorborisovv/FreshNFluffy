@@ -1,0 +1,19 @@
+﻿@model FreshNFluffy.ViewModels.Products.ProductFormViewModel
+
+@{
+    ViewData["Title"] = "Create Product";
+}
+
+<h2 class="mb-3">Create Product</h2>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <partial name="_ProductFormPartial" model="Model" />
+
+    <button type="submit" class="btn btn-success">Create</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
