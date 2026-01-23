@@ -2,6 +2,7 @@
 {
     using FreshNFluffy.Services.Interfaces;
     using FreshNFluffy.ViewModels.Products;
+
     using Microsoft.AspNetCore.Mvc;
     public class ProductsController : Controller
     {
@@ -16,13 +17,14 @@
         public async Task<IActionResult> Index([FromQuery] ProductQueryViewModel query)
         {
             ProductQueryViewModel model = await productService.GetAllAsync(query);
+
             return View(model);
         }
 
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var model = await productService.GetDetailsAsync(id);
+            ProductDetailsViewModel? model = await productService.GetDetailsAsync(id);
 
             if (model == null)
             {
@@ -35,7 +37,7 @@
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var model = await productService.GetCreateFormAsync();
+            ProductFormViewModel model = await productService.GetCreateFormAsync();
 
             return View(model);
         }
@@ -66,7 +68,7 @@
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var model = await productService.GetEditFormAsync(id);
+            ProductFormViewModel? model = await productService.GetEditFormAsync(id);
 
             if (model == null)
                 return NotFound();
@@ -80,9 +82,9 @@
         {
             if(!ModelState.IsValid)
             {
-                var fresh = await productService.GetCreateFormAsync();
+                ProductFormViewModel formModelWithCategories = await productService.GetCreateFormAsync();
 
-                model.Categories = fresh.Categories;
+                model.Categories = formModelWithCategories.Categories;
 
                 return View(model);
             }
@@ -98,7 +100,7 @@
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var model = await productService.GetDeleteAsync(id);
+            ProductDetailsViewModel? model = await productService.GetDeleteAsync(id);
 
             if (model == null)
                 return NotFound();

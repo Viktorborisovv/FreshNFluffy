@@ -1,7 +1,6 @@
-﻿using FreshNFluffy.ViewModels.Products;
-
-namespace FreshNFluffy.Services.Interfaces
+﻿namespace FreshNFluffy.Services.Interfaces
 {
+    using FreshNFluffy.ViewModels.Products;
     public interface IProductService
     {
         Task<ProductQueryViewModel> GetAllAsync(ProductQueryViewModel query);

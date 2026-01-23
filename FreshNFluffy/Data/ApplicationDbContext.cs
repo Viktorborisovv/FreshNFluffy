@@ -2,6 +2,7 @@
 {
     using FreshNFluffy.Data.Models;
     using FreshNFluffy.Data.Models.Enum;
+
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 

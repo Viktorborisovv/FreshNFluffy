@@ -3,9 +3,12 @@
     using FreshNFluffy.Data;
     using FreshNFluffy.Data.Models;
     using FreshNFluffy.Data.Models.Enum;
+
     using FreshNFluffy.Services.Interfaces;
+
     using FreshNFluffy.ViewModels.Categories;
     using FreshNFluffy.ViewModels.Products;
+
     using Microsoft.EntityFrameworkCore;
 
     public class ProductService : IProductService
