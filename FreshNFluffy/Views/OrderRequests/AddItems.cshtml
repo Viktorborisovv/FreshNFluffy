@@ -38,13 +38,14 @@
 }
 else
 {
-	<table class="table table-striped">
+	<table class="table table-striped align-middle">
 		<thead>
 			<tr>
 				<th>Product</th>
 				<th class="text-end">Unit Price</th>
 				<th class="text-end">Qty</th>
 				<th class="text-end">Total</th>
+				<th class="text-end">Actions</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -53,8 +54,40 @@ else
 				<tr>
 					<td>@item.ProductName</td>
 					<td class="text-end">@item.UnitPrice.ToString("0.00")</td>
-					<td class="text-end">@item.Quantity</td>
+
+					<td class="text-end">
+						<form asp-action="UpdateItemQuantity" method="post"
+							  class="d-flex justify-content-end align-items-center gap-2">
+							@Html.AntiForgeryToken()
+							<input type="hidden" name="orderItemId" value="@item.OrderItemId" />
+							<input type="hidden" name="orderRequestId" value="@Model.OrderRequestId" />
+
+							<input type="number"
+								   name="newQuantity"
+								   value="@item.Quantity"
+								   min="1"
+								   max="100"
+								   class="form-control form-control-sm"
+								   style="width: 90px;" />
+
+							<button type="submit" class="btn btn-sm btn-outline-primary">
+								Update
+							</button>
+						</form>
+					</td>
+
 					<td class="text-end">@item.RowTotal.ToString("0.00")</td>
+
+					<td class="text-end">
+						<form asp-action="RemoveItem" method="post" class="d-inline">
+							@Html.AntiForgeryToken()
+							<input type="hidden" name="orderItemId" value="@item.OrderItemId" />
+							<input type="hidden" name="orderRequestId" value="@Model.OrderRequestId" />
+							<button type="submit" class="btn btn-sm btn-outline-danger">
+								Remove
+							</button>
+						</form>
+					</td>
 				</tr>
 			}
 		</tbody>
