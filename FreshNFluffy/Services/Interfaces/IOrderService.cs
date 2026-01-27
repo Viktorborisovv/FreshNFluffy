@@ -9,6 +9,10 @@ namespace FreshNFluffy.Services.Interfaces
         Task<AddOrderItemViewModel?> GetAddItemsFormAsync(int orderRequestId);
         Task<bool> AddItemAsync(AddOrderItemInputModel model);
 
-        Task<OrderSummaryViewModel?> GetSummaryAsync(int orderRequestId); 
+        Task<OrderSummaryViewModel?> GetSummaryAsync(int orderRequestId);
+
+        Task<bool> UpdateItemQuantityAsync(int orderItemId, int newQuantity);
+
+        Task<bool> RemoveItemAsync(int orderItemId);
     }
 }

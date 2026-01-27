@@ -33,7 +33,7 @@
                 return BadRequest();
             }
 
-            var model = await orderService.GetAddItemsFormAsync(id);
+            AddOrderItemViewModel? model = await orderService.GetAddItemsFormAsync(id);
 
             if (model == null)
             {
@@ -47,6 +47,11 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(OrderCreateViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             int orderId = await orderService.CreateOrderAsync(model);
 
             if (orderId <= 0)
@@ -80,7 +85,7 @@
         [HttpGet]
         public async Task<IActionResult> Summary(int id)
         {
-            var model = await orderService.GetSummaryAsync(id);
+            OrderSummaryViewModel? model = await orderService.GetSummaryAsync(id);
 
             if (model == null)
             {
@@ -88,6 +93,36 @@
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateItemQuantity(int orderItemId, int orderRequestId, int newQuantity)
+        {
+            bool isQuantityUpdatedSuccessfully =
+                await orderService.UpdateItemQuantityAsync(orderItemId, newQuantity);
+
+            if (!isQuantityUpdatedSuccessfully)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(AddItems), new { id = orderRequestId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveItem(int orderItemId, int orderRequestId)
+        {
+            bool isItemRemovedSuccessfully =
+                await orderService.RemoveItemAsync(orderItemId);
+
+            if (!isItemRemovedSuccessfully)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(AddItems), new {id = orderRequestId});
         }
     }
 }

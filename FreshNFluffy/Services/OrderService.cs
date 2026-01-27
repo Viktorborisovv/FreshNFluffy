@@ -5,7 +5,6 @@
     using FreshNFluffy.Data.Models.Enum;
 
     using FreshNFluffy.Services.Interfaces;
-
     using FreshNFluffy.ViewModels.Orders;
     using Microsoft.EntityFrameworkCore;
 
@@ -83,8 +82,10 @@
 
         public async Task<bool> AddItemAsync(AddOrderItemInputModel model)
         {
-            if (model.Quantity <= 0)
+            if(model.Quantity < 1 || model.Quantity > 100)
+            {
                 return false;
+            }
 
             bool orderExists = await dbContext.OrderRequests
                 .AsNoTracking()
@@ -164,6 +165,47 @@
                 Items = items,
                 TotalPrice = total
             };
+        }
+
+        public async Task<bool> UpdateItemQuantityAsync(int orderItemId, int requestedQuantity)
+        {
+            if(requestedQuantity <= 0 || requestedQuantity > 100)
+            {
+                return false;
+            }
+
+            OrderItem? orderItemToUpdate = await dbContext
+                .OrderItems
+                .FirstOrDefaultAsync(i => i.OrderItemId == orderItemId);
+
+            if(orderItemToUpdate == null)
+            {
+                return false;
+            }
+
+            orderItemToUpdate.Quantity = requestedQuantity;
+
+            await dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> RemoveItemAsync(int orderItemId)
+        {
+            OrderItem? orderItemToRemove = await dbContext
+                .OrderItems
+                .FirstOrDefaultAsync(orderItem => orderItem.OrderItemId == orderItemId);
+
+            if(orderItemToRemove == null)
+            {
+                return false;
+            }
+
+            dbContext.OrderItems.Remove(orderItemToRemove);
+
+            await dbContext.SaveChangesAsync();
+
+            return true;
         }
     }
 }
