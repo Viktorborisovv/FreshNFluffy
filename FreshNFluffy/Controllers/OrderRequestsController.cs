@@ -2,6 +2,7 @@
 {
     using FreshNFluffy.Services.Interfaces;
     using FreshNFluffy.ViewModels.Orders;
+    using FreshNFluffy.ViewModels.Orders.Management;
 
     using Microsoft.AspNetCore.Mvc;
 
@@ -122,7 +123,15 @@
                 return BadRequest();
             }
 
-            return RedirectToAction(nameof(AddItems), new {id = orderRequestId});
+            return RedirectToAction(nameof(AddItems), new { id = orderRequestId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Manage()
+        {
+            OrderListViewModel model = await orderService.GetAllForManagementAsync();
+
+            return View(model);
         }
     }
 }

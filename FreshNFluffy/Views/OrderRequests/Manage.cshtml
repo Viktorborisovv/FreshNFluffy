@@ -1,0 +1,55 @@
+﻿@model FreshNFluffy.ViewModels.Orders.Management.OrderListViewModel
+
+@{
+    ViewData["Title"] = "Manage Orders";
+}
+
+<h2 class="mb-3">Manage Orders</h2>
+
+@if (!Model.Orders.Any())
+{
+    <div class="alert alert-info">No orders yet.</div>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Customer</th>
+                <th>Created</th>
+                <th>Pickup</th>
+                <th>Status</th>
+                <th class="text-end">Total</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.Orders)
+            {
+                <tr>
+                    <td>@order.OrderRequestId</td>
+                    <td>@order.CustomerName</td>
+                    <td>@order.CreatedOn.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@order.PickupDate.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@order.Status</td>
+                    <td class="text-end">@order.TotalPrice.ToString("0.00")</td>
+                    <td class="text-end">
+                        <a asp-controller="OrderRequests"
+                           asp-action="Summary"
+                           asp-route-id="@order.OrderRequestId"
+                           class="btn btn-sm btn-outline-primary">
+                            Summary
+                        </a>
+                        <a asp-controller="OrderRequests"
+                           asp-action="AddItems"
+                           asp-route-id="@order.OrderRequestId"
+                           class="btn btn-sm btn-outline-secondary ms-1">
+                            Edit Items
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

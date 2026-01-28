@@ -6,6 +6,8 @@
 
     using FreshNFluffy.Services.Interfaces;
     using FreshNFluffy.ViewModels.Orders;
+    using FreshNFluffy.ViewModels.Orders.Management;
+
     using Microsoft.EntityFrameworkCore;
 
     public class OrderService : IOrderService
@@ -206,6 +208,33 @@
             await dbContext.SaveChangesAsync();
 
             return true;
+        }
+        public async Task<OrderListViewModel> GetAllForManagementAsync()
+        {
+            List<OrderListItemViewModel> ordersForManagement = await dbContext
+                .OrderRequests
+                .AsNoTracking()
+                .GroupJoin(
+                    dbContext.OrderItems.AsNoTracking(),
+                    orderRequest => orderRequest.OrderRequestId,
+                    orderItem => orderItem.OrderRequestId,
+                    (orderRequest, orderItems) => new OrderListItemViewModel
+                    {
+                        OrderRequestId = orderRequest.OrderRequestId,
+                        CustomerName = orderRequest.CustomerName,
+                        CreatedOn = orderRequest.CreatedOn,
+                        PickupDate = orderRequest.PickupDate,
+                        Status = orderRequest.Status.ToString(),
+                        TotalPrice = orderItems.Sum(oi => oi.UnitPrice * oi.Quantity)
+                    })
+                .OrderByDescending(o => o.CreatedOn)
+                .ThenByDescending(o => o.OrderRequestId)
+                .ToListAsync();
+
+            return new OrderListViewModel
+            {
+                Orders = ordersForManagement
+            };
         }
     }
 }

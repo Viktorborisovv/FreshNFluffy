@@ -1,7 +1,8 @@
-﻿using FreshNFluffy.ViewModels.Orders;
-
-namespace FreshNFluffy.Services.Interfaces
+﻿namespace FreshNFluffy.Services.Interfaces
 {
+    using FreshNFluffy.ViewModels.Orders;
+    using FreshNFluffy.ViewModels.Orders.Management;
+
     public interface IOrderService
     {
         Task<int> CreateOrderAsync(OrderCreateViewModel model);
@@ -14,5 +15,7 @@ namespace FreshNFluffy.Services.Interfaces
         Task<bool> UpdateItemQuantityAsync(int orderItemId, int newQuantity);
 
         Task<bool> RemoveItemAsync(int orderItemId);
+
+        Task<OrderListViewModel> GetAllForManagementAsync();
     }
 }

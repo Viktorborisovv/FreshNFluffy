@@ -10,7 +10,8 @@
     <div class="card-body">
         <p class="mb-1"><strong>Customer:</strong> @Model.CustomerName</p>
         <p class="mb-1"><strong>Phone:</strong> @Model.PhoneNumber</p>
-        <p class="mb-1"><strong>Pickup:</strong> @Model.PickupDate</p>
+        <p class="mb-1"><strong>Pickup:</strong> @Model.PickupDate.ToString("dd.MM.yyyy HH:mm")</p>
+
         @if (!string.IsNullOrWhiteSpace(Model.Notes))
         {
             <p class="mb-0"><strong>Notes:</strong> @Model.Notes</p>
