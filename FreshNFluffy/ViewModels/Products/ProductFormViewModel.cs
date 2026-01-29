@@ -11,6 +11,7 @@ namespace FreshNFluffy.ViewModels.Products
 
         [Required]
         [StringLength(ProductNameMaxLength, MinimumLength = ProductNameMinLength)]
+        [Display(Name = "Product Name")]
         public string Name { get; set; } = null!;
 
         [MaxLength(DescriptionMaxLength)]
@@ -25,6 +26,7 @@ namespace FreshNFluffy.ViewModels.Products
         public string? ImageUrl { get; set; }
 
         [Required]
+        [Display(Name = "Category")]
         public int CategoryId { get; set; }
 
         public int NutritionTypes { get; set; }

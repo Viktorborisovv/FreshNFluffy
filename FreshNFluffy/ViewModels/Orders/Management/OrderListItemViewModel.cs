@@ -9,6 +9,8 @@
 
         public string Status { get; set; } = null!;
 
+        public int StatusValue { get; set; }
+
         public decimal TotalPrice { get; set; } 
     }
 }

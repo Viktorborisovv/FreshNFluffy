@@ -1,5 +1,7 @@
 ﻿namespace FreshNFluffy.Services.Interfaces
 {
+    using FreshNFluffy.Data.Models.Enum;
+
     using FreshNFluffy.ViewModels.Orders;
     using FreshNFluffy.ViewModels.Orders.Management;
 
@@ -17,5 +19,7 @@
         Task<bool> RemoveItemAsync(int orderItemId);
 
         Task<OrderListViewModel> GetAllForManagementAsync();
+
+        Task<bool> UpdateStatusAsync(int orderRequestId, OrderStatus newStatus);
     }
 }

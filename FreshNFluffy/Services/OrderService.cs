@@ -225,6 +225,7 @@
                         CreatedOn = orderRequest.CreatedOn,
                         PickupDate = orderRequest.PickupDate,
                         Status = orderRequest.Status.ToString(),
+                        StatusValue = (int)orderRequest.Status,
                         TotalPrice = orderItems.Sum(oi => oi.UnitPrice * oi.Quantity)
                     })
                 .OrderByDescending(o => o.CreatedOn)
@@ -235,6 +236,40 @@
             {
                 Orders = ordersForManagement
             };
+        }
+
+        public async Task<bool> UpdateStatusAsync(int orderRequestId, OrderStatus newStatus)
+        {
+            OrderRequest? orderRequestToUpdate = await dbContext
+                .OrderRequests
+                .FirstOrDefaultAsync(or => or.OrderRequestId == orderRequestId);
+
+            if(orderRequestToUpdate == null)
+            {
+                return false;
+            }
+
+            if (orderRequestToUpdate.Status == OrderStatus.Completed ||
+               orderRequestToUpdate.Status == OrderStatus.Cancelled)
+            {
+                return false;
+            }
+
+            bool isValidTransition =
+                (orderRequestToUpdate.Status == OrderStatus.Pending && (newStatus == OrderStatus.Confirmed || newStatus == OrderStatus.Cancelled)) ||
+                (orderRequestToUpdate.Status == OrderStatus.Confirmed && (newStatus == OrderStatus.Ready || newStatus == OrderStatus.Cancelled)) ||
+                (orderRequestToUpdate.Status == OrderStatus.Ready && (newStatus == OrderStatus.Completed || newStatus == OrderStatus.Cancelled));
+
+            if (!isValidTransition)
+            {
+                return false;
+            }
+
+            orderRequestToUpdate.Status = newStatus;
+
+            await dbContext.SaveChangesAsync();
+
+            return true;
         }
     }
 }

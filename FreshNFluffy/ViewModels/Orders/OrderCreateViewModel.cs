@@ -17,9 +17,11 @@
         public string PhoneNumber { get; set; } = null!;
 
         [Required]
+        [Display(Name = "Pickup Date")]
         public DateTime PickupDate { get; set; }
 
         [StringLength(NotesMaxLength, MinimumLength = NotesMinLength)]
+        [Display(Name = "Additional Notes")]
         public string? Notes { get; set; }
 
         public List<OrderItemCreateViewModel> Items { get; set; } = new();

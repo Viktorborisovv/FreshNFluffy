@@ -1,6 +1,9 @@
 ﻿namespace FreshNFluffy.Controllers
 {
+    using FreshNFluffy.Data.Models.Enum;
+
     using FreshNFluffy.Services.Interfaces;
+
     using FreshNFluffy.ViewModels.Orders;
     using FreshNFluffy.ViewModels.Orders.Management;
 
@@ -132,6 +135,32 @@
             OrderListViewModel model = await orderService.GetAllForManagementAsync();
 
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateStatus(int orderRequestId, int newStatus)
+        {
+            if (orderRequestId <= 0)
+            {
+                return BadRequest();
+            }
+
+            if(!Enum.IsDefined(typeof(OrderStatus), newStatus))
+            {
+                return BadRequest();
+            }
+
+            OrderStatus requestedStatus = (OrderStatus)newStatus;
+
+            bool isStatusUpdatedSuccessfully =
+                await orderService.UpdateStatusAsync(orderRequestId, requestedStatus);
+
+            if (!isStatusUpdatedSuccessfully)
+            {
+                return BadRequest();
+            }
+            return RedirectToAction(nameof(Manage));
         }
     }
 }

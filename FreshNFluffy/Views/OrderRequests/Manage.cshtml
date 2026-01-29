@@ -32,8 +32,35 @@ else
                     <td>@order.CustomerName</td>
                     <td>@order.CreatedOn.ToString("dd.MM.yyyy HH:mm")</td>
                     <td>@order.PickupDate.ToString("dd.MM.yyyy HH:mm")</td>
-                    <td>@order.Status</td>
+                    <td>
+                        @if (order.StatusValue == 0)
+                        {
+                            <span class="badge bg-secondary">@order.Status</span>
+                        }
+                        else if (order.StatusValue == 1)
+                        {
+                            <span class="badge bg-success">@order.Status</span>
+                        }
+                        else if (order.StatusValue == 2)
+                        {
+                            <span class="badge bg-warning text-dark">@order.Status</span>
+                        }
+                        else if (order.StatusValue == 3)
+                        {
+                            <span class="badge bg-primary">@order.Status</span>
+                        }
+                        else if (order.StatusValue == 4)
+                        {
+                            <span class="badge bg-danger">@order.Status</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-dark">@order.Status</span>
+                        }
+                    </td>
+
                     <td class="text-end">@order.TotalPrice.ToString("0.00")</td>
+
                     <td class="text-end">
                         <a asp-controller="OrderRequests"
                            asp-action="Summary"
@@ -41,12 +68,76 @@ else
                            class="btn btn-sm btn-outline-primary">
                             Summary
                         </a>
-                        <a asp-controller="OrderRequests"
-                           asp-action="AddItems"
-                           asp-route-id="@order.OrderRequestId"
-                           class="btn btn-sm btn-outline-secondary ms-1">
-                            Edit Items
-                        </a>
+
+                        @if (order.StatusValue != 3 && order.StatusValue != 4)
+                        {
+                            <a asp-controller="OrderRequests"
+                               asp-action="AddItems"
+                               asp-route-id="@order.OrderRequestId"
+                               class="btn btn-sm btn-outline-secondary ms-1">
+                                Edit Items
+                            </a>
+                        }
+
+                        @if (order.TotalPrice <= 0)
+                        {
+                            <span class="badge bg-warning text-dark ms-1">Empty</span>
+                        }
+                        else
+                        {
+                            @if (order.StatusValue == 0)
+                            {
+                                <form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+                                    <input type="hidden" name="newStatus" value="1" />
+                                    <button class="btn btn-sm btn-success" type="submit">Confirm</button>
+                                </form>
+
+                                <form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+                                    <input type="hidden" name="newStatus" value="4" />
+                                    <button class="btn btn-sm btn-danger" type="submit">Cancel</button>
+                                </form>
+                            }
+                            else if (order.StatusValue == 1)
+                            {
+                                <form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+                                    <input type="hidden" name="newStatus" value="2" />
+                                    <button class="btn btn-sm btn-warning" type="submit">Mark Ready</button>
+                                </form>
+
+                                <form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+                                    <input type="hidden" name="newStatus" value="4" />
+                                    <button class="btn btn-sm btn-danger" type="submit">Cancel</button>
+                                </form>
+                            }
+                            else if (order.StatusValue == 2)
+                            {
+                                <form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+                                    <input type="hidden" name="newStatus" value="3" />
+                                    <button class="btn btn-sm btn-primary" type="submit">Complete</button>
+                                </form>
+
+                                <form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+                                    <input type="hidden" name="newStatus" value="4" />
+                                    <button class="btn btn-sm btn-danger" type="submit">Cancel</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary ms-1">Locked</span>
+                            }
+                        }
                     </td>
                 </tr>
             }
