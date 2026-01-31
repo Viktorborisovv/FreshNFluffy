@@ -9,7 +9,6 @@
     using FreshNFluffy.ViewModels.Orders.Management;
 
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.IdentityModel.Tokens;
 
     public class OrderService : IOrderService
     {
@@ -38,12 +37,19 @@
         }
         public async Task<AddOrderItemViewModel?> GetAddItemsFormAsync(int orderRequestId)
         {
-            bool orderExists = await dbContext.OrderRequests
+            var orderRequest= await dbContext.OrderRequests
                 .AsNoTracking()
-                .AnyAsync(oe => oe.OrderRequestId == orderRequestId);
+                .Select(o => new { o.OrderRequestId, o.Status })
+                .FirstOrDefaultAsync(oe => oe.OrderRequestId == orderRequestId);
 
-            if (!orderExists)
+            if (orderRequest == null)
+            {
                 return null;
+            }
+
+            bool isLocked = 
+                orderRequest.Status == OrderStatus.Completed || 
+                orderRequest.Status == OrderStatus.Cancelled;
 
             List<ProductSelectViewModel> products = await dbContext.Products
                 .AsNoTracking()
@@ -73,6 +79,7 @@
             return new AddOrderItemViewModel
             {
                 OrderRequestId = orderRequestId,
+                IsLocked = isLocked,
                 Products = products,
                 CurrentItems = items,
                 NewItem = new AddOrderItemInputModel

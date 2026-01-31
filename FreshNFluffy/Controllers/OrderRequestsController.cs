@@ -44,6 +44,11 @@
                 return NotFound();
             }
 
+            if (model.IsLocked)
+            {
+                TempData["Error"] = "This order is locked (Completed or Cancelled). You cannot edit items.";
+            }
+
             return View(model);
         }
 

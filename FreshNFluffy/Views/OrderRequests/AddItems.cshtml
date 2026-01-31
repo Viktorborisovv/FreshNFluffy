@@ -2,101 +2,132 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
-	ViewData["Title"] = "Add Items";
+    ViewData["Title"] = "Add Items";
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning">@TempData["Error"]</div>
 }
 
 <h2 class="mb-3">Add Items to Order #@Model.OrderRequestId</h2>
 
-<form asp-action="AddItem" method="post" class="row g-2 mb-4">
-	@Html.AntiForgeryToken()
-	<input type="hidden" asp-for="NewItem.OrderRequestId" />
-
-	<div class="col-md-7">
-		<select class="form-select" asp-for="NewItem.ProductId"
-				asp-items="@(new SelectList(Model.Products, nameof(FreshNFluffy.ViewModels.Orders.ProductSelectViewModel.ProductId), nameof(FreshNFluffy.ViewModels.Orders.ProductSelectViewModel.Name)))">
-			<option value="">-- Select product --</option>
-		</select>
-	</div>
-
-	<div class="col-md-3">
-		<input class="form-control" asp-for="NewItem.Quantity" />
-	</div>
-
-	<div class="col-md-2">
-		<button class="btn btn-success w-100" type="submit">Add</button>
-	</div>
-
-	<div class="col-12">
-		<span asp-validation-for="NewItem.ProductId" class="text-danger"></span>
-		<span asp-validation-for="NewItem.Quantity" class="text-danger ms-2"></span>
-	</div>
-</form>
-
-@if (!Model.CurrentItems.Any())
+@if (!Model.IsLocked)
 {
-	<div class="alert alert-info">No items added yet.</div>
+    <form asp-action="AddItem" method="post" class="row g-2 mb-4">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="NewItem.OrderRequestId" />
+
+        <div class="col-md-7">
+            <select class="form-select"
+                    asp-for="NewItem.ProductId"
+                    asp-items="@(new SelectList(Model.Products,
+                                            nameof(FreshNFluffy.ViewModels.Orders.ProductSelectViewModel.ProductId),
+                                            nameof(FreshNFluffy.ViewModels.Orders.ProductSelectViewModel.Name)))">
+            <option value="">-- Select product --</option>
+        </select>
+    </div>
+
+        <div class="col-md-3">
+            <input class="form-control" asp-for="NewItem.Quantity" />
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn btn-success w-100" type="submit">Add</button>
+        </div>
+
+        <div class="col-12">
+            <span asp-validation-for="NewItem.ProductId" class="text-danger"></span>
+            <span asp-validation-for="NewItem.Quantity" class="text-danger ms-2"></span>
+        </div>
+    </form>
 }
 else
 {
-	<table class="table table-striped align-middle">
-		<thead>
-			<tr>
-				<th>Product</th>
-				<th class="text-end">Unit Price</th>
-				<th class="text-end">Qty</th>
-				<th class="text-end">Total</th>
-				<th class="text-end">Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model.CurrentItems)
-			{
-				<tr>
-					<td>@item.ProductName</td>
-					<td class="text-end">@item.UnitPrice.ToString("0.00")</td>
+    <div class="alert alert-warning">
+        This order is locked. You can only review items.
+    </div>
+}
 
-					<td class="text-end">
-						<form asp-action="UpdateItemQuantity" method="post"
-							  class="d-flex justify-content-end align-items-center gap-2">
-							@Html.AntiForgeryToken()
-							<input type="hidden" name="orderItemId" value="@item.OrderItemId" />
-							<input type="hidden" name="orderRequestId" value="@Model.OrderRequestId" />
+@if (!Model.CurrentItems.Any())
+{
+    <div class="alert alert-info">No items added yet.</div>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th class="text-end">Unit Price</th>
+                <th class="text-end">Qty</th>
+                <th class="text-end">Total</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CurrentItems)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td class="text-end">@item.UnitPrice.ToString("0.00")</td>
 
-							<input type="number"
-								   name="newQuantity"
-								   value="@item.Quantity"
-								   min="1"
-								   max="100"
-								   class="form-control form-control-sm"
-								   style="width: 90px;" />
+                    <td class="text-end">
+                        @if (!Model.IsLocked)
+                        {
+                            <form asp-action="UpdateItemQuantity" method="post"
+                                  class="d-flex justify-content-end align-items-center gap-2">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="orderItemId" value="@item.OrderItemId" />
+                                <input type="hidden" name="orderRequestId" value="@Model.OrderRequestId" />
 
-							<button type="submit" class="btn btn-sm btn-outline-primary">
-								Update
-							</button>
-						</form>
-					</td>
+                                <input type="number"
+                                       name="newQuantity"
+                                       value="@item.Quantity"
+                                       min="1"
+                                       max="100"
+                                       class="form-control form-control-sm"
+                                       style="width: 90px;" />
 
-					<td class="text-end">@item.RowTotal.ToString("0.00")</td>
+                                <button type="submit" class="btn btn-sm btn-outline-primary">
+                                    Update
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">@item.Quantity</span>
+                        }
+                    </td>
 
-					<td class="text-end">
-						<form asp-action="RemoveItem" method="post" class="d-inline">
-							@Html.AntiForgeryToken()
-							<input type="hidden" name="orderItemId" value="@item.OrderItemId" />
-							<input type="hidden" name="orderRequestId" value="@Model.OrderRequestId" />
-							<button type="submit" class="btn btn-sm btn-outline-danger">
-								Remove
-							</button>
-						</form>
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
+                    <td class="text-end">@item.RowTotal.ToString("0.00")</td>
+
+                    <td class="text-end">
+                        @if (!Model.IsLocked)
+                        {
+                            <form asp-action="RemoveItem" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="orderItemId" value="@item.OrderItemId" />
+                                <input type="hidden" name="orderRequestId" value="@Model.OrderRequestId" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    Remove
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Locked</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 <a asp-action="Summary" asp-route-id="@Model.OrderRequestId" class="btn btn-primary">Finish & Review</a>
 <a asp-controller="Products" asp-action="Index" class="btn btn-secondary ms-1">Back to Products</a>
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }
