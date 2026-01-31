@@ -3,7 +3,7 @@
     using System.ComponentModel.DataAnnotations;
     using static FreshNFluffy.Common.EntityValidation.OrderRequest;
 
-    public class OrderCreateViewModel
+    public class OrderCreateViewModel : IValidatableObject
     {
         [Required(ErrorMessage = "The Customer Name field is required.")]
         [Display(Name = "Customer Name")]
@@ -25,5 +25,18 @@
         public string? Notes { get; set; }
 
         public List<OrderItemCreateViewModel> Items { get; set; } = new();
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            DateTime minPickup = DateTime.Today.AddDays(1);
+
+            if (PickupDate < minPickup)
+            {
+                yield return new ValidationResult(
+
+                    $"Pickup date must be on or after {minPickup:dd.MM.yyyy}.",
+                    new[] { nameof(PickupDate) });
+            }
+        }
     }
 }
