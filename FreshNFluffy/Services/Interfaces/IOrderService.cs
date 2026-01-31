@@ -21,5 +21,7 @@
         Task<OrderListViewModel> GetAllForManagementAsync();
 
         Task<bool> UpdateStatusAsync(int orderRequestId, OrderStatus newStatus);
+
+        Task<OrderDetailsViewModel?> GetDetailsForManagementAsync(int orderRequestId);
     }
 }

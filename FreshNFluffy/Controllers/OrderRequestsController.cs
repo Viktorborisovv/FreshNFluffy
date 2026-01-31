@@ -162,5 +162,23 @@
             }
             return RedirectToAction(nameof(Manage));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            if(id <= 0)
+            {
+                return BadRequest();
+            }
+
+            OrderDetailsViewModel? model = await orderService.GetDetailsForManagementAsync(id);
+           
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
     }
 }

@@ -51,7 +51,7 @@
                        && p.Description.Contains(search)));
             }
 
-            if (query.NutritionTypes.HasValue && query.NutritionTypes.Value != 0)
+             if (query.NutritionTypes.HasValue && query.NutritionTypes.Value != 0)
             {
                 int selected = query.NutritionTypes.Value;
                 productsQuery = productsQuery

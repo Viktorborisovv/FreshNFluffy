@@ -271,5 +271,47 @@
 
             return true;
         }
+
+        public async Task<OrderDetailsViewModel?> GetDetailsForManagementAsync(int orderRequestId)
+        {
+            OrderRequest? order = await dbContext.OrderRequests
+                .AsNoTracking()
+                .FirstOrDefaultAsync(o => o.OrderRequestId == orderRequestId);
+
+            if(order == null)
+            {
+                return null;
+            }
+
+            Task<List<OrderItemRowViewModel>> items = dbContext.OrderItems
+                .AsNoTracking()
+                .Where(i => i.OrderRequestId == orderRequestId)
+                .Include(i => i.Product)
+                .OrderBy(i => i.OrderItemId)
+                .Select(i => new OrderItemRowViewModel
+                {
+                    OrderItemId = i.OrderItemId,
+                    ProductName = i.Product.Name,
+                    Quantity = i.Quantity,
+                    UnitPrice = i.UnitPrice
+                })
+                .ToListAsync();
+
+            decimal totalPrice = items.Result.Sum(i => i.RowTotal);
+
+            return new OrderDetailsViewModel
+            {
+                OrderRequestId = order.OrderRequestId,
+                CustomerName = order.CustomerName,
+                PhoneNumber = order.PhoneNumber,
+                CreatedOn = order.CreatedOn,
+                PickupDate = order.PickupDate,
+                StatusValue = (int)order.Status,
+                Status = order.Status.ToString(),
+                Notes = order.Notes,
+                Items = items.Result,
+                TotalPrice = totalPrice
+            };
+        }
     }
 }
