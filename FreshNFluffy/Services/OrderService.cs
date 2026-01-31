@@ -9,6 +9,7 @@
     using FreshNFluffy.ViewModels.Orders.Management;
 
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.IdentityModel.Tokens;
 
     public class OrderService : IOrderService
     {
@@ -84,7 +85,14 @@
 
         public async Task<bool> AddItemAsync(AddOrderItemInputModel model)
         {
-            if(model.Quantity < 1 || model.Quantity > 100)
+            bool isLocked = await IsOrderLockedAsync(model.OrderRequestId);
+
+            if (isLocked)
+            {
+                return false;
+            }
+
+            if (model.Quantity < 1 || model.Quantity > 100)
             {
                 return false;
             }
@@ -171,7 +179,7 @@
 
         public async Task<bool> UpdateItemQuantityAsync(int orderItemId, int requestedQuantity)
         {
-            if(requestedQuantity <= 0 || requestedQuantity > 100)
+            if (requestedQuantity <= 0 || requestedQuantity > 100)
             {
                 return false;
             }
@@ -180,7 +188,15 @@
                 .OrderItems
                 .FirstOrDefaultAsync(i => i.OrderItemId == orderItemId);
 
-            if(orderItemToUpdate == null)
+
+            if (orderItemToUpdate == null)
+            {
+                return false;
+            }
+
+            bool isLocked = await IsOrderLockedAsync(orderItemToUpdate.OrderRequestId);
+
+            if (isLocked)
             {
                 return false;
             }
@@ -198,7 +214,14 @@
                 .OrderItems
                 .FirstOrDefaultAsync(orderItem => orderItem.OrderItemId == orderItemId);
 
-            if(orderItemToRemove == null)
+            if (orderItemToRemove == null)
+            {
+                return false;
+            }
+
+            bool isLocked = await IsOrderLockedAsync(orderItemToRemove.OrderRequestId);
+
+            if (isLocked)
             {
                 return false;
             }
@@ -244,7 +267,7 @@
                 .OrderRequests
                 .FirstOrDefaultAsync(or => or.OrderRequestId == orderRequestId);
 
-            if(orderRequestToUpdate == null)
+            if (orderRequestToUpdate == null)
             {
                 return false;
             }
@@ -278,12 +301,12 @@
                 .AsNoTracking()
                 .FirstOrDefaultAsync(o => o.OrderRequestId == orderRequestId);
 
-            if(order == null)
+            if (order == null)
             {
                 return null;
             }
 
-            Task<List<OrderItemRowViewModel>> items = dbContext.OrderItems
+            List<OrderItemRowViewModel> items = await dbContext.OrderItems
                 .AsNoTracking()
                 .Where(i => i.OrderRequestId == orderRequestId)
                 .Include(i => i.Product)
@@ -297,7 +320,7 @@
                 })
                 .ToListAsync();
 
-            decimal totalPrice = items.Result.Sum(i => i.RowTotal);
+            decimal totalPrice = items.Sum(i => i.RowTotal);
 
             return new OrderDetailsViewModel
             {
@@ -309,9 +332,17 @@
                 StatusValue = (int)order.Status,
                 Status = order.Status.ToString(),
                 Notes = order.Notes,
-                Items = items.Result,
+                Items = items,
                 TotalPrice = totalPrice
             };
+        }
+
+        private async Task<bool> IsOrderLockedAsync(int orderRequestId)
+        {
+            return await dbContext.OrderRequests
+                .AsNoTracking()
+                .AnyAsync(o => o.OrderRequestId == orderRequestId &&
+                          (o.Status == OrderStatus.Completed || o.Status == OrderStatus.Cancelled));
         }
     }
 }
