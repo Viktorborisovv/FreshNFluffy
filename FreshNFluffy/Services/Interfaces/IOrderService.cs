@@ -18,7 +18,7 @@
 
         Task<bool> RemoveItemAsync(int orderItemId);
 
-        Task<OrderListViewModel> GetAllForManagementAsync();
+        Task<OrderListViewModel> GetAllForManagementAsync(int? statusFilter, string? searchTerm);
 
         Task<bool> UpdateStatusAsync(int orderRequestId, OrderStatus newStatus);
 

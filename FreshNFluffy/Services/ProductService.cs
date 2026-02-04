@@ -32,7 +32,7 @@
                 })
                 .ToListAsync();
 
-            IQueryable<Data.Models.Product> productsQuery = dbContext.Products
+            IQueryable<Product> productsQuery = dbContext.Products
                 .AsNoTracking()
                 .Include(p => p.Category);
 
@@ -142,7 +142,7 @@
         //Edit action
         public async Task<ProductFormViewModel?> GetEditFormAsync(int id)
         {
-            var product = await dbContext.Products
+            Product? product = await dbContext.Products
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
@@ -151,7 +151,7 @@
                 return null;
             }
 
-            var categories = await dbContext.Categories
+            List<CategorySelectViewModel> categories = await dbContext.Categories
                 .AsNoTracking()
                 .OrderBy(c => c.Name)
                 .Select(c => new CategorySelectViewModel
@@ -178,7 +178,7 @@
             if(model.ProductId == null)
                 return false;
 
-            var product = await dbContext.Products
+            Product? product = await dbContext.Products
                 .FirstOrDefaultAsync(p => p.ProductId == model.ProductId.Value);
 
             if(product == null)
@@ -224,7 +224,7 @@
 
         public async Task<bool> DeleteAsync(int id)
         {
-          var product = await dbContext.Products
+            Product? product = await dbContext.Products
                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
             if (product == null)

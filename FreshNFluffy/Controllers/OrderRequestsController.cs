@@ -76,19 +76,24 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddItem(AddOrderItemViewModel model)
         {
+            int orderRequestId = model.NewItem.OrderRequestId;
+
             if (!ModelState.IsValid)
             {
+                TempData["Error"] = "Please select a product and enter a valid quantity (1–100).";
                 return RedirectToAction(nameof(AddItems), new { id = model.NewItem.OrderRequestId });
             }
 
-            bool addedItem = await orderService.AddItemAsync(model.NewItem);
+            bool isItemAddedSuccessfully = await orderService.AddItemAsync(model.NewItem);
 
-            if (!addedItem)
+            if(!isItemAddedSuccessfully)
             {
-                return BadRequest();
+                TempData["Error"] = "Cannot add item. The order may be locked or the selected product is invalid.";
+                return RedirectToAction(nameof(AddItems), new {id = orderRequestId});
             }
 
-            return RedirectToAction(nameof(AddItems), new { id = model.NewItem.OrderRequestId });
+            TempData["Success"] = "Item added successfully";
+            return RedirectToAction(nameof(AddItems), new { id = orderRequestId });
         }
 
         [HttpGet]
@@ -113,9 +118,11 @@
 
             if (!isQuantityUpdatedSuccessfully)
             {
-                return BadRequest();
+                TempData["Error"] = "Cannot update quantity. The order may be locked or the quantity is invalid.";
+                return RedirectToAction(nameof(AddItems), new { id = orderRequestId });
             }
 
+            TempData["Success"] = "Quantity updated successfully.";
             return RedirectToAction(nameof(AddItems), new { id = orderRequestId });
         }
 
@@ -128,16 +135,18 @@
 
             if (!isItemRemovedSuccessfully)
             {
-                return BadRequest();
+                TempData["Error"] = "Cannot remove item. The order may be locked or the item no longer exists.";
+                return RedirectToAction(nameof(AddItems), new { id = orderRequestId });
             }
 
+            TempData["Success"] = "Item removed successfully.";
             return RedirectToAction(nameof(AddItems), new { id = orderRequestId });
         }
 
         [HttpGet]
-        public async Task<IActionResult> Manage()
+        public async Task<IActionResult> Manage(int? statusFilter, string? searchTerm)
         {
-            OrderListViewModel model = await orderService.GetAllForManagementAsync();
+            OrderListViewModel model = await orderService.GetAllForManagementAsync(statusFilter, searchTerm);
 
             return View(model);
         }

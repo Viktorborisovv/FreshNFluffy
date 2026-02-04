@@ -15,6 +15,7 @@ namespace FreshNFluffy.ViewModels.Products
         public string Name { get; set; } = null!;
 
         [MaxLength(DescriptionMaxLength)]
+        [MinLength(DescriptionMinLength)]
         public string? Description { get; set; }
 
         [Required]

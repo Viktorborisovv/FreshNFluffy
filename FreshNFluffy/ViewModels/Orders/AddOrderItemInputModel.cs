@@ -9,6 +9,7 @@ namespace FreshNFluffy.ViewModels.Orders
         public int OrderRequestId { get; set; }
 
         [Required]
+        [Display(Name = "Product")]
         public int ProductId { get; set; }
 
         [Required]

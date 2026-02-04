@@ -1,6 +1,7 @@
 ﻿namespace FreshNFluffy.Data.Models
 {
     using FreshNFluffy.Data.Models.Enum;
+
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 

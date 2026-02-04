@@ -10,8 +10,9 @@
             = new List<ProductSelectViewModel>();
 
         public IEnumerable<OrderItemRowViewModel> CurrentItems { get; set; }
-         = new List<OrderItemRowViewModel>();
+            = new List<OrderItemRowViewModel>();
 
-        public AddOrderItemInputModel NewItem { get; set; } = new();
+        public AddOrderItemInputModel NewItem { get; set; } 
+            = new AddOrderItemInputModel();
     }
 }

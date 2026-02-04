@@ -142,21 +142,20 @@
             dbContext.OrderItems.Add(newItem);
 
             await dbContext.SaveChangesAsync();
+
             return true;
         }
 
-
-
         public async Task<OrderSummaryViewModel?> GetSummaryAsync(int orderRequestId)
         {
-            var order = await dbContext.OrderRequests
+            OrderRequest? order = await dbContext.OrderRequests
                 .AsNoTracking()
                 .FirstOrDefaultAsync(o => o.OrderRequestId == orderRequestId);
 
             if (order == null)
                 return null;
 
-            var items = await dbContext.OrderItems
+            List<OrderItemRowViewModel> items = await dbContext.OrderItems
                 .AsNoTracking()
                 .Where(i => i.OrderRequestId == orderRequestId)
                 .Include(i => i.Product)
@@ -219,7 +218,7 @@
         {
             OrderItem? orderItemToRemove = await dbContext
                 .OrderItems
-                .FirstOrDefaultAsync(orderItem => orderItem.OrderItemId == orderItemId);
+                .FirstOrDefaultAsync(oi => oi.OrderItemId == orderItemId);
 
             if (orderItemToRemove == null)
             {
@@ -239,11 +238,30 @@
 
             return true;
         }
-        public async Task<OrderListViewModel> GetAllForManagementAsync()
+        public async Task<OrderListViewModel> GetAllForManagementAsync(int? statusFilter, string? searchTerm)
         {
-            List<OrderListItemViewModel> ordersForManagement = await dbContext
+            IQueryable<OrderRequest> orderRequestsQuery = dbContext
                 .OrderRequests
-                .AsNoTracking()
+                .AsNoTracking();
+
+            if(statusFilter.HasValue)
+            {
+                orderRequestsQuery = orderRequestsQuery.Where(or => (int)or.Status == statusFilter.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string term = searchTerm.Trim().ToLower();
+
+                bool isNumber = int.TryParse(term, out int parsedOrderId);
+
+                orderRequestsQuery = orderRequestsQuery.Where(or =>
+                or.CustomerName.Contains(term) ||
+                or.PhoneNumber.Contains(term) ||
+                (isNumber && or.OrderRequestId == parsedOrderId));
+            }
+
+            List<OrderListItemViewModel> ordersForManagement = await orderRequestsQuery
                 .GroupJoin(
                     dbContext.OrderItems.AsNoTracking(),
                     orderRequest => orderRequest.OrderRequestId,
@@ -264,7 +282,9 @@
 
             return new OrderListViewModel
             {
-                Orders = ordersForManagement
+                Orders = ordersForManagement,
+                StatusFilter = statusFilter,
+                SearchTerm = searchTerm
             };
         }
 
@@ -343,7 +363,6 @@
                 TotalPrice = totalPrice
             };
         }
-
         private async Task<bool> IsOrderLockedAsync(int orderRequestId)
         {
             return await dbContext.OrderRequests
@@ -351,5 +370,6 @@
                 .AnyAsync(o => o.OrderRequestId == orderRequestId &&
                           (o.Status == OrderStatus.Completed || o.Status == OrderStatus.Cancelled));
         }
+
     }
 }

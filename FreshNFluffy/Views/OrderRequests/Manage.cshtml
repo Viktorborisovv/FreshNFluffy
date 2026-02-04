@@ -6,6 +6,38 @@
 
 <h2 class="mb-3">Manage Orders</h2>
 
+<form method="get" asp-action="Manage" class="row g-2 align-items-end mb-3">
+	<div class="col-md-3">
+		<label class="form-label">Status</label>
+		<select class="form-select" name="statusFilter">
+			<option value="">All</option>
+			<option value="0" selected="@(Model.StatusFilter == 0)">Pending</option>
+			<option value="1" selected="@(Model.StatusFilter == 1)">Confirmed</option>
+			<option value="2" selected="@(Model.StatusFilter == 2)">Ready</option>
+			<option value="3" selected="@(Model.StatusFilter == 3)">Completed</option>
+			<option value="4" selected="@(Model.StatusFilter == 4)">Cancelled</option>
+		</select>
+	</div>
+
+	<div class="col-md-6">
+		<label class="form-label">Search</label>
+		<input class="form-control"
+		       type="text"
+			   name="searchTerm"
+			   value="@Model.SearchTerm"
+			   placeholder="Customer / Phone / Order #" />
+	</div>
+
+	<div class="col-md-3 d-flex gap-2">
+		<button class="btn btn-primary w-100" type="submit">Filter</button>
+
+		<a class="btn btn-outline-secondary w-100"
+		asp-action="Manage">
+			Clear
+		</a>
+	</div>
+</form>
+
 @if (!Model.Orders.Any())
 {
 	<div class="alert alert-info">No orders yet.</div>

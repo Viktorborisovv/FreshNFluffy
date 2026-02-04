@@ -43,6 +43,61 @@
                     }
                 </p>
 
+                <div class="mt-3">
+                    @if (Model.StatusValue == 0)
+                    {
+                        <form asp-action="UpdateStatus" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="orderRequestId" value="@Model.OrderRequestId" />
+                            <input type="hidden" name="newStatus" value="1" />
+                            <button class="btn btn-sm btn-success" type="submit">Confirm</button>
+                        </form>
+
+                        <form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="orderRequestId" value="@Model.OrderRequestId" />
+                            <input type="hidden" name="newStatus" value="4" />
+                            <button class="btn btn-sm btn-danger" type="submit">Cancel</button>
+                        </form>
+                    }
+                    else if (Model.StatusValue == 1)
+                    {
+                        <form asp-action="UpdateStatus" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="orderRequestId" value="@Model.OrderRequestId" />
+                            <input type="hidden" name="newStatus" value="2" />
+                            <button class="btn btn-sm btn-warning" type="submit">Mark Ready</button>
+                        </form>
+
+                        <form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="orderRequestId" value="@Model.OrderRequestId" />
+                            <input type="hidden" name="newStatus" value="4" />
+                            <button class="btn btn-sm btn-danger" type="submit">Cancel</button>
+                        </form>
+                    }
+                    else if (Model.StatusValue == 2)
+                    {
+                        <form asp-action="UpdateStatus" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="orderRequestId" value="@Model.OrderRequestId" />
+                            <input type="hidden" name="newStatus" value="3" />
+                            <button class="btn btn-sm btn-primary" type="submit">Complete</button>
+                        </form>
+
+                        <form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="orderRequestId" value="@Model.OrderRequestId" />
+                            <input type="hidden" name="newStatus" value="4" />
+                            <button class="btn btn-sm btn-danger" type="submit">Cancel</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Locked</span>
+                    }
+                </div>
+
                 @if (!string.IsNullOrWhiteSpace(Model.Notes))
                 {
                     <div class="mt-2">
@@ -54,11 +109,15 @@
                 <div class="mt-3">
                     <a asp-action="Manage" class="btn btn-secondary">Back to Manage</a>
 
-                    <a asp-action="AddItems"
-                       asp-route-id="@Model.OrderRequestId"
-                       class="btn btn-outline-secondary ms-1">
-                        Edit Items
-                    </a>
+                    @if (Model.StatusValue != 3 && Model.StatusValue != 4)
+                    {
+                        <a asp-action="AddItems"
+                           asp-route-id="@Model.OrderRequestId"
+                           class="btn btn-outline-secondary ms-1">
+                            Edit Items
+                        </a>
+                    }
+
 
                     <a asp-action="Summary"
                        asp-route-id="@Model.OrderRequestId"
