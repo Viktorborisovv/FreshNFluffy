@@ -1,22 +1,315 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+html, body {
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    background: linear-gradient(
+        to bottom, 
+        rgba(0,0,0,.28), 
+        rgba(0,0,0,.10)), 
+        url('/img/bg.jpg') center / cover no-repeat fixed;
+}
+
+.table {
+    background: rgba(255,255,255,.70);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+    .table thead th {
+        background: rgba(255,255,255,.85);
+    }
+
+
+
+.ff-navbar {
+    background: linear-gradient(90deg, #0d6efd, #6f42c1);
+    border-bottom: 1px solid rgba(255,255,255,.18);
+    box-shadow: 0 12px 30px rgba(0,0,0,.10);
+}
+
+    .ff-navbar .nav-link {
+        color: rgba(255,255,255,.85) !important;
+        transition: color .15s ease;
+    }
+
+        .ff-navbar .nav-link:hover,
+        .ff-navbar .nav-link:focus {
+            color: #fff !important;
+        }
+
+.ff-surface {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.06);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.06);
+}
+
+.ff-hero {
+    border-radius: 22px;
+    padding: 32px;
+    background: rgba(255,255,255,.70);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,.45);
+    box-shadow: 0 18px 45px rgba(0,0,0,.18);
+}
+
+    .ff-hero h1 {
+        color: #111;
+        text-shadow: 0 2px 10px rgba(255, 255, 255,.75);
+    }
+
+    .ff-hero .lead{
+        color: rgba(0, 0, 0,.75);
+    }
+
+.ff-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.60);
+    border: 1px solid rgba(255,255,255,.70);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.ff-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.06);
+    border-radius: 18px;
+    box-shadow: 0 10px 26px rgba(0,0,0,.05);
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+    .ff-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 34px rgba(0,0,0,.08);
+    }
+
+.ff-feature {
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,.55);
+    background: rgba(255,255,255,.78);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 16px 36px rgba(0,0,0,.16);
+    position: relative;
+    overflow: hidden;
+    transform: translateZ(0);
+}
+
+    .ff-feature::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        opacity: .95;
+        pointer-events: none;
+    }
+
+.ff-feature-blue::before {
+    background: linear-gradient(135deg, rgba(13,110,253,.28), rgba(255,255,255,.65));
+}
+
+.ff-feature-purple::before {
+    background: linear-gradient(135deg, rgba(111,66,193,.28), rgba(255,255,255,.65));
+}
+
+.ff-feature-green::before {
+    background: linear-gradient(135deg, rgba(25,135,84,.25), rgba(255,255,255,.65));
+}
+
+.ff-feature-amber::before {
+    background: linear-gradient(135deg, rgba(255,193,7,.28), rgba(255,255,255,.65));
+}
+
+.ff-feature-title {
+    position: relative;
+    z-index: 1;
+    font-weight: 800;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+    color: #111;
+}
+
+.ff-feature-text {
+    position: relative;
+    z-index: 1;
+    color: rgba(0,0,0,.78);
+}
+
+.ff-feature:hover {
+    transform: translateY(-2px);
+    transition: .15s ease;
+}
+
+}
+
+.ff-hero h1,
+.ff-hero p {
+    text-shadow: 0 1px 12px rgba(255,255,255,.35);
+}
+
+/* --- Default template styles (kept, slightly tidied) --- */
+/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification */
+
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-word;
+}
+
+a {
+    color: #0077cc;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+.footer {
+    position: relative;
+    width: 100%;
+    padding: 14px 0;
+    background: rgba(255,255,255,.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,35);
+    box-shadow: 0 -10px 30px rgba(0,0,0,.10);
+    overflow: hidden;
+}
+
+    .footer::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            to bottom,
+            rgba(255,255,255,.70), 
+            rgba(255,255,255,.35), 
+            rgba(255,255,255,.18) );
+        opacity: .9;
+        pointer-events: none;
+    }
+
+    .footer .container {
+        position: relative;
+        z-index: 1;
+    }
+
+.footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ff-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    flex-wrap: nowrap;
+}
+
+.ff-action {
+    padding: .32rem .6rem;
+    font-size: .8rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all .15s ease;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+
+.ff-action-primary {
+    background: #0d6efd;
+    color: #fff !important;
+}
+
+    .ff-action-primary:hover {
+        background: #0b5ed7;
+    }
+
+.ff-action-secondary {
+    background: #f1f3f5;
+    color: #212529 !important;
+    border: 1px solid #dee2e6;
+}
+
+    .ff-action-secondary:hover {
+        background: #e9ecef;
+    }
+
+.ff-action-warning {
+    background: #ffc107;
+    color: #212529 !important;
+}
+
+    .ff-action-warning:hover {
+        background: #ffca2c;
+    }
+
+.ff-action-danger {
+    background: #dc3545;
+    color: #fff !important;
+}
+
+    .ff-action-danger:hover {
+        background: #bb2d3b;
+    }
+
+.ff-chip {
+    padding: .3rem .55rem;
+    border-radius: 999px;
+    font-size: .72rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ff-chip-empty {
+    background: #ffe69c;
+    color: #664d03;
+}
+
+.ff-chip-locked {
+    background: #adb5bd;
+    color: #fff;
+}
+
+.card-img-top{
+    height: 230px;
+    object-fit: cover;
 }

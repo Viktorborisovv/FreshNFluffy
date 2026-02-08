@@ -5,16 +5,6 @@
     ViewData["Title"] = "Add Items";
 }
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
-
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">@TempData["Success"]</div>
-}
-
 <h2 class="mb-3">Add Items to Order #@Model.OrderRequestId</h2>
 
 @if (!Model.IsLocked)
@@ -94,7 +84,7 @@ else
                                        class="form-control form-control-sm"
                                        style="width: 90px;" />
 
-                                <button type="submit" class="btn btn-sm btn-outline-primary">
+                                <button type="submit" class="btn btn-sm btn-primary">
                                     Update
                                 </button>
                             </form>
@@ -114,7 +104,7 @@ else
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="orderItemId" value="@item.OrderItemId" />
                                 <input type="hidden" name="orderRequestId" value="@Model.OrderRequestId" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <button type="submit" class="btn btn-sm btn-danger">
                                     Remove
                                 </button>
                             </form>

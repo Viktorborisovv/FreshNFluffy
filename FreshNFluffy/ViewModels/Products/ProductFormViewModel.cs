@@ -3,7 +3,6 @@ namespace FreshNFluffy.ViewModels.Products
 {
     using FreshNFluffy.ViewModels.Categories;
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
     using static FreshNFluffy.Common.EntityValidation.Product;
     public class ProductFormViewModel
     {

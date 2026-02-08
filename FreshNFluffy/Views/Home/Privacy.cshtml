@@ -1,123 +1,35 @@
 ﻿@{
-    ViewData["Title"] = "Политика за поверителност";
-    var siteName = "FreshNFluffy"; // смени с името на сайта/бизнеса ти
-    var email = "privacy@bakary.com"; // смени с реален имейл
-    var phone = "+359 88 123 4567";   // по желание
-    var address = "Кюстендил, България";  // по желание
+    ViewData["Title"] = "Privacy";
 }
 
-<section class="container py-4 py-md-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-9">
+<div class="ff-surface p-4 p-md-5">
+    <h2 class="fw-bold mb-2">Privacy Policy</h2>
+    <p class="ff-muted mb-4">
+        Demo project. We store only what’s needed to process an order request.
+    </p>
 
-            <header class="mb-4">
-                <h1 class="display-6 fw-bold">@ViewData["Title"]</h1>
-                <p class="text-muted mb-0">
-                    Последна актуализация: @DateTime.UtcNow.ToString("dd.MM.yyyy")
-                </p>
-            </header>
-
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4 p-md-5">
-
-                    <p class="lead">
-                        В <strong>@siteName</strong> уважаваме личните Ви данни и се ангажираме да ги обработваме
-                        прозрачно и сигурно. Тази политика обяснява какви данни събираме, защо ги събираме и какви са Вашите права.
-                    </p>
-
-                    <hr class="my-4" />
-
-                    <h2 class="h5 fw-semibold">1) Кои сме ние:</h2>
-                    <p class="mb-3">
-                        Администратор на лични данни: <strong>@siteName</strong><br />
-                        Адрес: <span>@address</span><br />
-                        Контакт: <a href="mailto:@email">@email</a>
-                        @if (!string.IsNullOrWhiteSpace(phone))
-                        {
-                            <span> · </span>
-                        
-                            <a href="tel:@phone">@phone</a>
-                        }
-                    </p>
-
-                    <h2 class="h5 fw-semibold mt-4">2) Какви данни можем да събираме:</h2>
-                    <ul class="mb-3">
-                        <li><strong>Данни за контакт</strong> (име, имейл, телефон) — ако ни пишете чрез форма/имейл.</li>
-                        <li><strong>Данни за поръчки</strong> (адрес за доставка, предпочитания, бележки към поръчка) — ако имате онлайн поръчки.</li>
-                    </ul>
-
-                    <h2 class="h5 fw-semibold mt-4">3) За какво използваме данните:</h2>
-                    <ul class="mb-3">
-                        <li>За да отговорим на запитвания и заявки.</li>
-                        <li>За обработка и доставка на поръчки (ако е приложимо).</li>
-                        <li>За подобряване на услугата и потребителското преживяване.</li>
-                        <li>За защита от злоупотреби и повишаване на сигурността.</li>
-                        <li>За изпращане на маркетингови съобщения само при изрично съгласие (ако се прилага).</li>
-                    </ul>
-
-                    <h2 class="h5 fw-semibold mt-4">4) Правно основание за обработка:</h2>
-                    <ul class="mb-3">
-                        <li><strong>Договор</strong> — когато обработката е нужна за изпълнение на поръчка/услуга.</li>
-                        <li><strong>Легитимен интерес</strong> — за сигурност, предотвратяване на измами и подобрения.</li>
-                        <li><strong>Съгласие</strong> — за бюлетин/маркетинг или определени cookies (ако се използват).</li>
-                        <li><strong>Законово задължение</strong> — счетоводни/данъчни изисквания (ако е приложимо).</li>
-                    </ul>
-
-                    <h2 class="h5 fw-semibold mt-4">5) Срок на съхранение:</h2>
-                    <p class="mb-3">
-                        Съхраняваме личните данни само докато са необходими за целите, за които са събрани,
-                        или докато законът изисква. Данни от запитвания се пазят разумен период,
-                        а данни за поръчки — според приложимите законови изисквания.
-                    </p>
-
-                    <h2 class="h5 fw-semibold mt-4">6) Споделяне с трети страни:</h2>
-                    <p class="mb-2">
-                        Можем да споделяме данни само при необходимост с доставчици на услуги, например:
-                    </p>
-                    <ul class="mb-3">
-                        <li>Куриерски фирми (за доставка).</li>
-                        <li>Платежни оператори (за плащания), ако се използват.</li>
-                        <li>Хостинг/поддръжка на сайта.</li>
-                        <li>Аналитични инструменти (напр. за статистика), ако са активни.</li>
-                    </ul>
-                    <p class="mb-3">
-                        Изискваме от тези партньори да обработват данните съгласно приложимото законодателство.
-                    </p>
-
-                    <h2 class="h5 fw-semibold mt-4">- Вашите права:</h2>
-                    <p class="mb-2">Имате право да:</p>
-                    <ul class="mb-3">
-                        <li>получите достъп до данните си;</li>
-                        <li>поискате корекция/актуализация;</li>
-                        <li>поискате изтриване (“правото да бъдеш забравен”), когато е приложимо;</li>
-                        <li>ограничите обработката;</li>
-                        <li>възразите срещу обработка на база легитимен интерес;</li>
-                        <li>преносимост на данните (когато е приложимо);</li>
-                        <li>оттеглите съгласие (ако обработката е на база съгласие).</li>
-                    </ul>
-
-                    <h2 class="h5 fw-semibold mt-4">- Сигурност:</h2>
-                    <p class="mb-3">
-                        Прилагаме технически и организационни мерки за защита на данните,
-                        включително контрол на достъпа и защита на инфраструктурата.
-                    </p>
-
-                    <h2 class="h5 fw-semibold mt-4">- Контакт:</h2>
-                    <p class="mb-0">
-                        Ако имате въпроси относно тази политика или искате да упражните права,
-                        свържете се с нас на <a href="mailto:@email">@email</a>.
-                    </p>
-
-                    <div class="alert alert-light border mt-4 mb-0">
-                        <small class="text-muted">
-                            Забележка: Този текст е примерен и може да се наложи адаптация според това дали имате акаунти, онлайн плащания,
-                            интеграции (Google Analytics, Meta Pixel), newsletter и др.
-                        </small>
-                    </div>
-
-                </div>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="ff-card p-4 h-100">
+                <div class="fw-semibold mb-2">What we store:</div>
+                <ul class="ff-muted mb-0">
+                    <li>Customer name and phone number</li>
+                    <li>Pickup date/time</li>
+                    <li>Order items (product and quantity)</li>
+                    <li>Optional notes</li>
+                </ul>
             </div>
+        </div>
 
+        <div class="col-md-6">
+            <div class="ff-card p-4 h-100">
+                <div class="fw-semibold mb-2">Why we store it:</div>
+                <ul class="ff-muted mb-0">
+                    <li>To prepare the order correctly</li>
+                    <li>To contact you if needed</li>
+                    <li>To manage order status</li>
+                </ul>
+            </div>
         </div>
     </div>
-</section>
+</div>

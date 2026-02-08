@@ -272,7 +272,7 @@
                         CustomerName = orderRequest.CustomerName,
                         CreatedOn = orderRequest.CreatedOn,
                         PickupDate = orderRequest.PickupDate,
-                        Status = orderRequest.Status.ToString(),
+                        Status = orderRequest.Status.ToString(),    
                         StatusValue = (int)orderRequest.Status,
                         TotalPrice = orderItems.Sum(oi => oi.UnitPrice * oi.Quantity)
                     })

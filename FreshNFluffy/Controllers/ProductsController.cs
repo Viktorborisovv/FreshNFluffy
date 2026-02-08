@@ -49,6 +49,7 @@
             if (!ModelState.IsValid)
             {
                 model = await productService.GetCreateFormAsync();
+
                 return View(model);
             }
 
@@ -59,6 +60,7 @@
                 ModelState.AddModelError(nameof(model.CategoryId), "Invalid category");
 
                 model = await productService.GetCreateFormAsync();
+
                 return View(model);
             }
 
@@ -71,7 +73,9 @@
             ProductFormViewModel? model = await productService.GetEditFormAsync(id);
 
             if (model == null)
+            {
                 return NotFound();
+            }
 
             return View(model);
         }
@@ -92,7 +96,9 @@
             bool productUpdated = await productService.EditAsync(model);
 
             if (!productUpdated)
+            {
                 return BadRequest();
+            }
 
             return RedirectToAction(nameof(Details), new { id = model.ProductId });
         }
@@ -103,7 +109,9 @@
             ProductDetailsViewModel? model = await productService.GetDeleteAsync(id);
 
             if (model == null)
+            {
                 return NotFound();
+            }
 
             return View(model);
         }

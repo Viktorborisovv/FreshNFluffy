@@ -94,84 +94,81 @@ else
 					<td class="text-end">@order.TotalPrice.ToString("0.00")</td>
 
 					<td class="text-end">
-						<a asp-controller="OrderRequests"
-						   asp-action="Details"
-						   asp-route-id="@order.OrderRequestId"
-						   class="btn btn-sm btn-outline-primary">
-							Details
-						</a>
+						<div class="ff-actions justify-content-end">
 
-
-						@if (order.StatusValue != 3 && order.StatusValue != 4)
-						{
+							<!-- Always visible -->
 							<a asp-controller="OrderRequests"
-							   asp-action="AddItems"
+							   asp-action="Details"
 							   asp-route-id="@order.OrderRequestId"
-							   class="btn btn-sm btn-outline-secondary ms-1">
-								Edit Items
+							   class="ff-action ff-action-primary">
+								Details
 							</a>
-						}
 
-						@if (order.TotalPrice <= 0)
-						{
-							<span class="badge bg-warning text-dark ms-1">Empty</span>
-						}
-						else
-						{
-							@if (order.StatusValue == 0)
+							@if (order.StatusValue != 3 && order.StatusValue != 4)
 							{
-								<form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
-									@Html.AntiForgeryToken()
-									<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
-									<input type="hidden" name="newStatus" value="1" />
-									<button class="btn btn-sm btn-success" type="submit">Confirm</button>
-								</form>
-
-								<form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
-									@Html.AntiForgeryToken()
-									<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
-									<input type="hidden" name="newStatus" value="4" />
-									<button class="btn btn-sm btn-danger" type="submit">Cancel</button>
-								</form>
+								<a asp-controller="OrderRequests"
+								   asp-action="AddItems"
+								   asp-route-id="@order.OrderRequestId"
+								   class="ff-action ff-action-secondary">
+									Edit
+								</a>
 							}
-							else if (order.StatusValue == 1)
-							{
-								<form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
-									@Html.AntiForgeryToken()
-									<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
-									<input type="hidden" name="newStatus" value="2" />
-									<button class="btn btn-sm btn-warning" type="submit">Mark Ready</button>
-								</form>
 
-								<form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
-									@Html.AntiForgeryToken()
-									<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
-									<input type="hidden" name="newStatus" value="4" />
-									<button class="btn btn-sm btn-danger" type="submit">Cancel</button>
-								</form>
-							}
-							else if (order.StatusValue == 2)
+							@if (order.TotalPrice <= 0)
 							{
-								<form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
-									@Html.AntiForgeryToken()
-									<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
-									<input type="hidden" name="newStatus" value="3" />
-									<button class="btn btn-sm btn-primary" type="submit">Complete</button>
-								</form>
-
-								<form asp-action="UpdateStatus" method="post" class="d-inline ms-1">
-									@Html.AntiForgeryToken()
-									<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
-									<input type="hidden" name="newStatus" value="4" />
-									<button class="btn btn-sm btn-danger" type="submit">Cancel</button>
-								</form>
+								<span class="ff-chip ff-chip-empty">Empty</span>
 							}
 							else
 							{
-								<span class="badge bg-secondary ms-1">Locked</span>
+								@if (order.StatusValue == 0)
+								{
+									<form asp-action="UpdateStatus" method="post">
+										@Html.AntiForgeryToken()
+										<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+										<input type="hidden" name="newStatus" value="1" />
+										<button class="ff-action ff-action-secondary">Confirm</button>
+									</form>
+
+									<form asp-action="UpdateStatus" method="post">
+										@Html.AntiForgeryToken()
+										<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+										<input type="hidden" name="newStatus" value="4" />
+										<button class="ff-action ff-action-danger">Cancel</button>
+									</form>
+								}
+								else if (order.StatusValue == 1)
+								{
+									<form asp-action="UpdateStatus" method="post">
+										@Html.AntiForgeryToken()
+										<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+										<input type="hidden" name="newStatus" value="2" />
+										<button class="ff-action ff-action-warning">Ready</button>
+									</form>
+
+									<form asp-action="UpdateStatus" method="post">
+										@Html.AntiForgeryToken()
+										<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+										<input type="hidden" name="newStatus" value="4" />
+										<button class="ff-action ff-action-danger">Cancel</button>
+									</form>
+								}
+								else if (order.StatusValue == 2)
+								{
+									<form asp-action="UpdateStatus" method="post">
+										@Html.AntiForgeryToken()
+										<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+										<input type="hidden" name="newStatus" value="3" />
+										<button class="ff-action ff-action-secondary">Complete</button>
+									</form>
+								}
+								else
+								{
+									<span class="ff-chip ff-chip-locked">Locked</span>
+								}
 							}
-						}
+						</div>
 					</td>
+
 				</tr>
 			}
 		</tbody>
