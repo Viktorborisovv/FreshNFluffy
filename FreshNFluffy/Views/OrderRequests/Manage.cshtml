@@ -31,7 +31,7 @@
 	<div class="col-md-3 d-flex gap-2">
 		<button class="btn btn-primary w-100" type="submit">Filter</button>
 
-		<a class="btn btn-outline-secondary w-100"
+		<a class="btn btn-danger w-100"
 		asp-action="Manage">
 			Clear
 		</a>
@@ -96,7 +96,6 @@ else
 					<td class="text-end">
 						<div class="ff-actions justify-content-end">
 
-							<!-- Always visible -->
 							<a asp-controller="OrderRequests"
 							   asp-action="Details"
 							   asp-route-id="@order.OrderRequestId"

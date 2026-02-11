@@ -4,15 +4,17 @@
     ViewData["Title"] = "Create Product";
 }
 
-<h2 class="mb-3">Create Product</h2>
+<div class="ff-glass p-4">
+    <h2 class="mb-3">Create Product</h2>
 
-<form asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
-    <partial name="_ProductFormPartial" model="Model" />
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <partial name="_ProductFormPartial" model="Model" />
 
-    <button type="submit" class="btn btn-outline-success btn-lg">Create</button>
-    <a asp-action="Index" class="btn btn-outline-danger">Cancel</a>
-</form>
+        <button type="submit" class="btn btn-success">Create</button>
+        <a asp-action="Index" class="btn btn-danger ms-1">Cancel</a>
+    </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
