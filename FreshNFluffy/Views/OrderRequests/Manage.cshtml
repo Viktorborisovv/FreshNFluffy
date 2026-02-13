@@ -1,175 +1,179 @@
 ﻿@model FreshNFluffy.ViewModels.Orders.Management.OrderListViewModel
 
 @{
-	ViewData["Title"] = "Manage Orders";
+    ViewData["Title"] = "Manage Orders";
 }
 
-<h2 class="mb-3">Manage Orders</h2>
+<div class="ff-glass p-4 mb-4">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+        <h2 class="mb-0">Manage Orders</h2>
+    </div>
 
-<form method="get" asp-action="Manage" class="row g-2 align-items-end mb-3">
-	<div class="col-md-3">
-		<label class="form-label">Status</label>
-		<select class="form-select" name="statusFilter">
-			<option value="">All</option>
-			<option value="0" selected="@(Model.StatusFilter == 0)">Pending</option>
-			<option value="1" selected="@(Model.StatusFilter == 1)">Confirmed</option>
-			<option value="2" selected="@(Model.StatusFilter == 2)">Ready</option>
-			<option value="3" selected="@(Model.StatusFilter == 3)">Completed</option>
-			<option value="4" selected="@(Model.StatusFilter == 4)">Cancelled</option>
-		</select>
-	</div>
+    <form method="get" asp-action="Manage" class="row g-2 align-items-end mb-0">
+        <div class="col-md-3">
+            <label class="form-label">Status</label>
+            <select class="form-select" name="statusFilter">
+                <option value="">All</option>
+                <option value="0" selected="@(Model.StatusFilter == 0)">Pending</option>
+                <option value="1" selected="@(Model.StatusFilter == 1)">Confirmed</option>
+                <option value="2" selected="@(Model.StatusFilter == 2)">Ready</option>
+                <option value="3" selected="@(Model.StatusFilter == 3)">Completed</option>
+                <option value="4" selected="@(Model.StatusFilter == 4)">Cancelled</option>
+            </select>
+        </div>
 
-	<div class="col-md-6">
-		<label class="form-label">Search</label>
-		<input class="form-control"
-		       type="text"
-			   name="searchTerm"
-			   value="@Model.SearchTerm"
-			   placeholder="Customer / Phone / Order #" />
-	</div>
+        <div class="col-md-6">
+            <label class="form-label">Search</label>
+            <input class="form-control"
+                   type="text"
+                   name="searchTerm"
+                   value="@Model.SearchTerm"
+                   placeholder="Customer / Phone / Order #" />
+        </div>
 
-	<div class="col-md-3 d-flex gap-2">
-		<button class="btn btn-primary w-100" type="submit">Filter</button>
+        <div class="col-md-3 d-flex gap-2">
+            <button class="btn btn-primary w-100" type="submit">Filter</button>
 
-		<a class="btn btn-danger w-100"
-		asp-action="Manage">
-			Clear
-		</a>
-	</div>
-</form>
+            <a class="btn btn-danger w-100"
+               asp-action="Manage">
+                Clear
+            </a>
+        </div>
+    </form>
+</div>
 
 @if (!Model.Orders.Any())
 {
-	<div class="alert alert-info">No orders yet.</div>
+    <div class="alert alert-info">No orders yet.</div>
 }
 else
 {
-	<table class="table table-striped align-middle">
-		<thead>
-			<tr>
-				<th>#</th>
-				<th>Customer</th>
-				<th>Created</th>
-				<th>Pickup</th>
-				<th>Status</th>
-				<th class="text-end">Total</th>
-				<th class="text-end">Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var order in Model.Orders)
-			{
-				<tr>
-					<td>@order.OrderRequestId</td>
-					<td>@order.CustomerName</td>
-					<td>@order.CreatedOn.ToString("dd.MM.yyyy HH:mm")</td>
-					<td>@order.PickupDate.ToString("dd.MM.yyyy HH:mm")</td>
-					<td>
-						@if (order.StatusValue == 0)
-						{
-							<span class="badge bg-secondary">@order.Status</span>
-						}
-						else if (order.StatusValue == 1)
-						{
-							<span class="badge bg-success">@order.Status</span>
-						}
-						else if (order.StatusValue == 2)
-						{
-							<span class="badge bg-warning text-dark">@order.Status</span>
-						}
-						else if (order.StatusValue == 3)
-						{
-							<span class="badge bg-primary">@order.Status</span>
-						}
-						else if (order.StatusValue == 4)
-						{
-							<span class="badge bg-danger">@order.Status</span>
-						}
-						else
-						{
-							<span class="badge bg-dark">@order.Status</span>
-						}
-					</td>
+    <div class="ff-table-wrap">
+        <table class="table table-striped align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Customer</th>
+                    <th>Created</th>
+                    <th>Pickup</th>
+                    <th>Status</th>
+                    <th class="text-end">Total</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model.Orders)
+                {
+                    <tr>
+                        <td>@order.OrderRequestId</td>
+                        <td>@order.CustomerName</td>
+                        <td>@order.CreatedOn.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@order.PickupDate.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>
+                            @if (order.StatusValue == 0)
+                            {
+                                <span class="badge bg-secondary">@order.Status</span>
+                            }
+                            else if (order.StatusValue == 1)
+                            {
+                                <span class="badge bg-success">@order.Status</span>
+                            }
+                            else if (order.StatusValue == 2)
+                            {
+                                <span class="badge bg-warning text-dark">@order.Status</span>
+                            }
+                            else if (order.StatusValue == 3)
+                            {
+                                <span class="badge bg-primary">@order.Status</span>
+                            }
+                            else if (order.StatusValue == 4)
+                            {
+                                <span class="badge bg-danger">@order.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-dark">@order.Status</span>
+                            }
+                        </td>
 
-					<td class="text-end">@order.TotalPrice.ToString("0.00")</td>
+                        <td class="text-end">@order.TotalPrice.ToString("0.00")</td>
 
-					<td class="text-end">
-						<div class="ff-actions justify-content-end">
+                        <td class="text-end">
+                            <div class="ff-actions justify-content-end">
+                                <a asp-controller="OrderRequests"
+                                   asp-action="Details"
+                                   asp-route-id="@order.OrderRequestId"
+                                   class="ff-action ff-action-primary">
+                                    Details
+                                </a>
 
-							<a asp-controller="OrderRequests"
-							   asp-action="Details"
-							   asp-route-id="@order.OrderRequestId"
-							   class="ff-action ff-action-primary">
-								Details
-							</a>
+                                @if (order.StatusValue != 3 && order.StatusValue != 4)
+                                {
+                                    <a asp-controller="OrderRequests"
+                                       asp-action="AddItems"
+                                       asp-route-id="@order.OrderRequestId"
+                                       class="ff-action ff-action-secondary">
+                                        Edit
+                                    </a>
+                                }
 
-							@if (order.StatusValue != 3 && order.StatusValue != 4)
-							{
-								<a asp-controller="OrderRequests"
-								   asp-action="AddItems"
-								   asp-route-id="@order.OrderRequestId"
-								   class="ff-action ff-action-secondary">
-									Edit
-								</a>
-							}
+                                @if (order.TotalPrice <= 0)
+                                {
+                                    <span class="ff-chip ff-chip-empty">Empty</span>
+                                }
+                                else
+                                {
+                                    @if (order.StatusValue == 0)
+                                    {
+                                        <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+                                            <input type="hidden" name="newStatus" value="1" />
+                                            <button class="ff-action ff-action-secondary" type="submit">Confirm</button>
+                                        </form>
 
-							@if (order.TotalPrice <= 0)
-							{
-								<span class="ff-chip ff-chip-empty">Empty</span>
-							}
-							else
-							{
-								@if (order.StatusValue == 0)
-								{
-									<form asp-action="UpdateStatus" method="post">
-										@Html.AntiForgeryToken()
-										<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
-										<input type="hidden" name="newStatus" value="1" />
-										<button class="ff-action ff-action-secondary">Confirm</button>
-									</form>
+                                        <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+                                            <input type="hidden" name="newStatus" value="4" />
+                                            <button class="ff-action ff-action-danger" type="submit">Cancel</button>
+                                        </form>
+                                    }
+                                    else if (order.StatusValue == 1)
+                                    {
+                                        <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+                                            <input type="hidden" name="newStatus" value="2" />
+                                            <button class="ff-action ff-action-warning" type="submit">Ready</button>
+                                        </form>
 
-									<form asp-action="UpdateStatus" method="post">
-										@Html.AntiForgeryToken()
-										<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
-										<input type="hidden" name="newStatus" value="4" />
-										<button class="ff-action ff-action-danger">Cancel</button>
-									</form>
-								}
-								else if (order.StatusValue == 1)
-								{
-									<form asp-action="UpdateStatus" method="post">
-										@Html.AntiForgeryToken()
-										<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
-										<input type="hidden" name="newStatus" value="2" />
-										<button class="ff-action ff-action-warning">Ready</button>
-									</form>
-
-									<form asp-action="UpdateStatus" method="post">
-										@Html.AntiForgeryToken()
-										<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
-										<input type="hidden" name="newStatus" value="4" />
-										<button class="ff-action ff-action-danger">Cancel</button>
-									</form>
-								}
-								else if (order.StatusValue == 2)
-								{
-									<form asp-action="UpdateStatus" method="post">
-										@Html.AntiForgeryToken()
-										<input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
-										<input type="hidden" name="newStatus" value="3" />
-										<button class="ff-action ff-action-secondary">Complete</button>
-									</form>
-								}
-								else
-								{
-									<span class="ff-chip ff-chip-locked">Locked</span>
-								}
-							}
-						</div>
-					</td>
-
-				</tr>
-			}
-		</tbody>
-	</table>
+                                        <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+                                            <input type="hidden" name="newStatus" value="4" />
+                                            <button class="ff-action ff-action-danger" type="submit">Cancel</button>
+                                        </form>
+                                    }
+                                    else if (order.StatusValue == 2)
+                                    {
+                                        <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="orderRequestId" value="@order.OrderRequestId" />
+                                            <input type="hidden" name="newStatus" value="3" />
+                                            <button class="ff-action ff-action-secondary" type="submit">Complete</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="ff-chip ff-chip-locked">Locked</span>
+                                    }
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }

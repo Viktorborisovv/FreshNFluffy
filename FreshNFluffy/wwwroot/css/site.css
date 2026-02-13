@@ -1,29 +1,13 @@
+/* Base / Background */
 html, body {
     min-height: 100%;
 }
 
 body {
-    background: linear-gradient(
-        to bottom, 
-        rgba(0,0,0,.28), 
-        rgba(0,0,0,.10)), 
-        url('/img/bg-v5.jpg') center / cover no-repeat fixed;
+    background: linear-gradient(to bottom, rgba(0,0,0,.28), rgba(0,0,0,.10)), url('/img/bg-v5.jpg') center / cover no-repeat fixed;
 }
 
-.table {
-    background: rgba(255,255,255,.70);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: 14px;
-    overflow: hidden;
-}
-
-    .table thead th {
-        background: rgba(255,255,255,.85);
-    }
-
-
-
+/* Navbar */
 .ff-navbar {
     background: linear-gradient(90deg, #0d6efd, #6f42c1);
     border-bottom: 1px solid rgba(255,255,255,.18);
@@ -40,13 +24,32 @@ body {
             color: #fff !important;
         }
 
-.ff-surface {
-    background: #fff;
-    border: 1px solid rgba(0,0,0,.06);
+/* Glass surfaces (reusable) */
+.ff-glass {
+    background: rgba(255,255,255,.70);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.55);
     border-radius: 18px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    box-shadow: 0 14px 40px rgba(0,0,0,.12);
 }
 
+.ff-input {
+    background: rgba(255,255,255,.88);
+    border: 1px solid rgba(0,0,0,.10);
+    border-radius: 14px;
+}
+
+    .ff-input:focus {
+        border-color: rgba(13,110,253,.35);
+        box-shadow: 0 0 0 .25rem rgba(13,110,253,.12);
+    }
+
+.ff-form .form-text {
+    color: rgba(0,0,0,.60);
+}
+
+/* Home Hero */
 .ff-hero {
     border-radius: 22px;
     padding: 32px;
@@ -59,11 +62,17 @@ body {
 
     .ff-hero h1 {
         color: #111;
-        text-shadow: 0 2px 10px rgba(255, 255, 255,.75);
+        text-shadow: 0 2px 10px rgba(255,255,255,.75);
+        letter-spacing: -0.6px;
     }
 
-    .ff-hero .lead{
-        color: rgba(0, 0, 0,.75);
+    .ff-hero .lead {
+        color: rgba(0,0,0,.75);
+    }
+
+    .ff-hero h1,
+    .ff-hero p {
+        text-shadow: 0 1px 12px rgba(255,255,255,.35);
     }
 
 .ff-pill {
@@ -78,19 +87,7 @@ body {
     -webkit-backdrop-filter: blur(10px);
 }
 
-.ff-card {
-    background: #fff;
-    border: 1px solid rgba(0,0,0,.06);
-    border-radius: 18px;
-    box-shadow: 0 10px 26px rgba(0,0,0,.05);
-    transition: transform .15s ease, box-shadow .15s ease;
-}
-
-    .ff-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 14px 34px rgba(0,0,0,.08);
-    }
-
+/* Feature cards (Home 4 cards) */
 .ff-feature {
     border-radius: 18px;
     border: 1px solid rgba(255,255,255,.55);
@@ -101,6 +98,7 @@ body {
     position: relative;
     overflow: hidden;
     transform: translateZ(0);
+    transition: transform .15s ease;
 }
 
     .ff-feature::before {
@@ -144,97 +142,62 @@ body {
 
 .ff-feature:hover {
     transform: translateY(-2px);
-    transition: .15s ease;
 }
 
+/* Generic card (if you still use it somewhere) */
+.ff-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.06);
+    border-radius: 18px;
+    box-shadow: 0 10px 26px rgba(0,0,0,.05);
+    transition: transform .15s ease, box-shadow .15s ease;
 }
 
-.ff-hero h1,
-.ff-hero p {
-    text-shadow: 0 1px 12px rgba(255,255,255,.35);
+    .ff-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 34px rgba(0,0,0,.08);
+    }
+
+.ff-muted {
+    color: rgba(0,0,0,.65);
 }
 
-/* --- Default template styles (kept, slightly tidied) --- */
-/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification */
-
-a.navbar-brand {
-    white-space: normal;
-    text-align: center;
-    word-break: break-word;
-}
-
-a {
-    color: #0077cc;
-}
-
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
-}
-
-.nav-pills .nav-link.active,
-.nav-pills .show > .nav-link {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
-}
-
-.border-top {
-    border-top: 1px solid #e5e5e5;
-}
-
-.border-bottom {
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-    font-size: 1rem;
-    line-height: inherit;
-}
-
-.footer {
-    position: relative;
-    width: 100%;
-    padding: 14px 0;
-    background: rgba(255,255,255,.55);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-top: 1px solid rgba(255,255,255,35);
-    box-shadow: 0 -10px 30px rgba(0,0,0,.10);
+/* Tables (Orders / Items) */
+.ff-table-wrap {
+    background: rgba(255,255,255,.70);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 16px;
     overflow: hidden;
+    border: 1px solid rgba(255,255,255,.55);
 }
 
-    .footer::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-            to bottom,
-            rgba(255,255,255,.70), 
-            rgba(255,255,255,.35), 
-            rgba(255,255,255,.18) );
-        opacity: .9;
-        pointer-events: none;
+    .ff-table-wrap .table {
+        margin-bottom: 0;
+        background: transparent;
     }
 
-    .footer .container {
-        position: relative;
-        z-index: 1;
-    }
-
-.footer-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
+.table {
+    background: transparent;
 }
 
+    .table thead th {
+        background: rgba(255,255,255,.90);
+    }
+
+    .table tbody tr {
+        background: rgba(255,255,255,.75);
+    }
+
+    .table thead th:first-child {
+        border-top-left-radius: 14px;
+    }
+
+    .table thead th:last-child {
+        border-top-right-radius: 14px;
+    }
+
+/* Orders action chips/buttons */
 .ff-actions {
     display: inline-flex;
     align-items: center;
@@ -309,61 +272,13 @@ button.accept-policy {
     color: #fff;
 }
 
-.card-img-top{
-    height: 230px;
-    object-fit: cover;
-}
-
-.ff-glass {
-    background: rgba(255,255,255,.60);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,.35);
-    border-radius: 18px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.10);
-}
-
-.ff-glass {
-    background: rgba(255,255,255,.70);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,.55);
-    border-radius: 18px;
-    box-shadow: 0 12px 30px rgba(0,0,0,.10);
-}
-
-.ff-product-card {
-    border: 1px solid rgba(255,255,255,.35);
-    border-radius: 18px;
-    overflow: hidden;
-    background: rgba(255,255,255,.85);
-    box-shadow: 0 10px 26px rgba(0,0,0,.08);
-    transition: transform .15s ease, box-shadow .15s ease;
-}
-
-    .ff-product-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 16px 40px rgba(0,0,0,.12);
-    }
-
-.ff-product-img {
-    height: 220px;
-    background: rgba(0,0,0,.03);
-    overflow: hidden;
-}
-
-    .ff-product-img img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
+/* Products cards (NO CROP) */
 .product-card {
+    border: 1px solid rgba(255,255,255,.35);
     border-radius: 18px;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,.35);
-    box-shadow: 0 14px 40px rgba(0,0,0,.12);
+    background: rgba(255,255,255,.88);
+    box-shadow: 0 14px 34px rgba(0,0,0,.12);
     transition: transform .15s ease, box-shadow .15s ease;
 }
 
@@ -374,82 +289,194 @@ button.accept-policy {
 
     .product-card .card-body {
         padding: 16px 18px 18px;
+        background: rgba(255,255,255,.92);
     }
 
     .product-card .card-title {
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: -.2px;
+        color: #1f2937;
     }
 
     .product-card .card-img-top {
         height: 230px;
-        object-fit: cover;
-        filter: saturate(1.05);
+        width: 100%;
+        object-fit: contain;
+        background: rgba(255,255,255,.35);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        padding: 12px;
     }
 
-.product-actions {
+/* Buttons under product */
+.product-action {
     display: flex;
     gap: .5rem;
     flex-wrap: wrap;
     margin-top: .35rem;
 }
-.ff-glass {
+
+/* Footer (glass) */
+.footer {
+    position: relative;
+    width: 100%;
+    padding: 14px 0;
     background: rgba(255,255,255,.55);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,.35);
-    border-radius: 22px;
-    box-shadow: 0 18px 55px rgba(0,0,0,.14);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,.35);
+    box-shadow: 0 -10px 30px rgba(0,0,0,.10);
+    overflow: hidden;
 }
 
-.ff-input {
-    background: rgba(255,255,255,.85);
-    border: 1px solid rgba(0,0,0,.10);
-    border-radius: 14px;
-}
-
-    .ff-input:focus {
-        border-color: rgba(13,110,253,.35);
-        box-shadow: 0 0 0 .25rem rgba(13,110,253,.12);
+    .footer::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient( to bottom, rgba(255,255,255,.70), rgba(255,255,255,.35), rgba(255,255,255,.18) );
+        opacity: .9;
+        pointer-events: none;
     }
 
-.ff-form .form-text {
-    color: rgba(0,0,0,.60);
+    .footer .container {
+        position: relative;
+        z-index: 1;
+    }
+
+.footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
-/* glass section wrapper */
-.ff-glass {
-    background: rgba(255,255,255,.70);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+/* Default template bits (minimal keep) */
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-word;
+}
+
+a {
+    color: #0077cc;
+}
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+/* Product card - make info block glass (no white slab) */
+.product-card {
+    background: rgba(255,255,255,.55);
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 14px 34px rgba(0,0,0,.12);
+}
+
+    .product-card .card-img-top {
+        height: 230px;
+        width: 100%;
+        object-fit: contain; /* ?? ???? */
+        background: rgba(255,255,255,.22);
+        padding: 12px;
+    }
+
+    .product-card .card-body {
+        background: linear-gradient( to bottom, rgba(255,255,255,.78), rgba(255,255,255,.55) );
+        border-top: 1px solid rgba(255,255,255,.55);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    .product-card .card-title {
+        color: #111;
+        font-weight: 800;
+        letter-spacing: -0.2px;
+    }
+
+    .product-card .card-text {
+        color: rgba(0,0,0,.72);
+    }
+
+    .product-card .text-muted {
+        color: rgba(0,0,0,.55) !important;
+    }
+    /* Privacy page cards */
+.ff-privacy-card {
+    background: rgba(255,255,255,.82);
     border: 1px solid rgba(255,255,255,.55);
     border-radius: 18px;
-    box-shadow: 0 14px 40px rgba(0,0,0,.10);
+    box-shadow: 0 14px 34px rgba(0,0,0,.10);
 }
 
-/* nice table wrapper for rounded corners */
-.ff-table-wrap {
-    background: rgba(255,255,255,.70);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,.55);
+.ff-privacy-card h5 {
+    font-weight: 800;
+    letter-spacing: -.2px;
 }
 
-    .ff-table-wrap .table {
-        margin-bottom: 0;
-        background: transparent;
+.ff-privacy-card ul {
+    padding-left: 1.1rem;
+}
+
+.ff-privacy-card li {
+    margin-bottom: .4rem;
+}
+
+.ff-privacy-card li:last-child {
+    margin-bottom: 0;
+}
+/* Privacy page header readability */
+.ff-glass h2 {
+    color: #111;
+    text-shadow: 0 2px 12px rgba(255,255,255,.6);
+}
+
+.ff-glass .text-muted {
+    color: rgba(0,0,0,.65) !important;
+}
+.ff-privacy-card {
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+    .ff-privacy-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 45px rgba(0,0,0,.14);
+        border-color: rgba(13,110,253,.25);
     }
 
-        .ff-table-wrap .table thead th {
-            background: rgba(255,255,255,.85);
-        }
-
-/* status badge */
-.ff-badge {
-    padding: .35rem .6rem;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: .75rem;
+.ff-form .form-label {
+    font-weight: 700;
+    color: rgba(0,0,0,.78);
 }
+
+.ff-dropdown {
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 14px;
+    box-shadow: 0 18px 45px rgba(0,0,0,.12);
+}
+
+    .ff-dropdown .form-check {
+        padding: .35rem .5rem .35rem 2rem;
+        border-radius: 10px;
+    }
+
+        .ff-dropdown .form-check:hover {
+            background: rgba(13,110,253,.08);
+        }

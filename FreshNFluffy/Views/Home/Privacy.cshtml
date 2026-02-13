@@ -2,34 +2,76 @@
     ViewData["Title"] = "Privacy";
 }
 
-<div class="ff-surface p-4 p-md-5">
-    <h2 class="fw-bold mb-2">Privacy Policy</h2>
-    <p class="ff-muted mb-4">
-        Demo project. We store only what’s needed to process an order request.
-    </p>
+<div class="ff-glass p-4 p-md-5 mb-4">
+    <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3 mb-4">
+        <div>
+            <h2 class="mb-1">Privacy Policy</h2>
+            <p class="mb-0 text-muted">
+                FreshNFluffy is a demo project. We store only what’s needed to process an order request.
+            </p>
+        </div>
+
+        <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
+            Last updated: Feb 2026
+        </span>
+    </div>
 
     <div class="row g-3">
-        <div class="col-md-6">
-            <div class="ff-card p-4 h-100">
-                <div class="fw-semibold mb-2">What we store:</div>
-                <ul class="ff-muted mb-0">
-                    <li>Customer name and phone number</li>
-                    <li>Pickup date/time</li>
-                    <li>Order items (product and quantity)</li>
-                    <li>Optional notes</li>
+        <div class="col-lg-6">
+            <div class="ff-privacy-card p-4 h-100">
+                <h5 class="mb-3">What we store</h5>
+                <ul class="mb-0">
+                    <li><strong>Customer name</strong> and <strong>phone number</strong></li>
+                    <li><strong>Pickup date/time</strong></li>
+                    <li><strong>Order items</strong> (product & quantity)</li>
+                    <li><strong>Optional notes</strong></li>
                 </ul>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="ff-card p-4 h-100">
-                <div class="fw-semibold mb-2">Why we store it:</div>
-                <ul class="ff-muted mb-0">
-                    <li>To prepare the order correctly</li>
-                    <li>To contact you if needed</li>
-                    <li>To manage order status</li>
+        <div class="col-lg-6">
+            <div class="ff-privacy-card p-4 h-100">
+                <h5 class="mb-3">Why we store it</h5>
+                <ul class="mb-0">
+                    <li>To prepare your order correctly</li>
+                    <li>To contact you if something needs clarification</li>
+                    <li>To manage the order status (pending/confirmed/ready/completed/cancelled)</li>
                 </ul>
             </div>
         </div>
+
+        <div class="col-lg-6">
+            <div class="ff-privacy-card p-4 h-100">
+                <h5 class="mb-3">Sharing</h5>
+                <p class="mb-0">
+                    We do not sell or share personal data with third parties. Data stays inside the demo app database.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="ff-privacy-card p-4 h-100">
+                <h5 class="mb-3">Retention</h5>
+                <p class="mb-0">
+                    Data is kept only for demonstration and testing purposes. You can remove orders/products from the UI.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-4" />
+
+    <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-2">
+        <div class="text-muted">
+            <p class="mb-0">
+                Questions? Contact the project owner via the repository page
+                <a href="https://github.com/Viktorborisovv/FreshNFluffy" target="_blank" rel="noopener noreferrer">
+                    https://github.com/Viktorborisovv/FreshNFluffy
+                </a>.
+            </p>
+        </div>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+            Back to Home
+        </a>
     </div>
 </div>

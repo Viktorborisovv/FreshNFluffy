@@ -125,7 +125,7 @@
 
             if (!productDeleted)
             {
-                TempData["ErrorMessage"] = "This product cannot be deleted because it is used in existing orders.";
+                TempData["Error"] = "This product cannot be deleted because it is used in existing orders.";
 
                 return RedirectToAction(nameof(Details), new { id });
             }

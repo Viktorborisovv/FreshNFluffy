@@ -1,12 +1,12 @@
 namespace FreshNFluffy
 {
     using FreshNFluffy.Data;
-
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
-
     using FreshNFluffy.Services;
     using FreshNFluffy.Services.Interfaces;
+
+    using Microsoft.AspNetCore.Identity;
+
+    using Microsoft.EntityFrameworkCore;
 
     public class Program
     {
@@ -23,7 +23,7 @@ namespace FreshNFluffy
             builder.Services
                 .AddDefaultIdentity<IdentityUser>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = false;
+                ConfigureIdentity(options, builder.Configuration);
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
@@ -45,20 +45,50 @@ namespace FreshNFluffy
                 app.UseHsts();
             }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
-app.UseRouting();
+            app.UseRouting();
 
-app.UseAuthentication();
-app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages();
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+            app.MapRazorPages();
 
-app.Run();
+            app.Run();
+        }
+
+        private static void ConfigureIdentity(IdentityOptions options, ConfigurationManager configuration)
+        {
+            options.SignIn.RequireConfirmedAccount = configuration
+                .GetValue<bool>("IdentityOptions:SignIn:RequireConfirmedAccount");
+            options.SignIn.RequireConfirmedEmail = configuration
+                .GetValue<bool>("IdentityOptions:SignIn:RequireConfirmedEmail");
+            options.SignIn.RequireConfirmedPhoneNumber = configuration
+                .GetValue<bool>("IdentityOptions:SignIn:RequireConfirmedPhoneNumber");
+            options.User.RequireUniqueEmail = configuration
+                .GetValue<bool>("IdentityOptions:User:RequireUniqueEmail");
+
+            options.Lockout.MaxFailedAccessAttempts = configuration
+                .GetValue<int>("IdentityOptions:Lockout:MaxFailedAccessAttempts");
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(configuration
+                .GetValue<int>("IdentityOptions:Lockout:DefaultLockoutTimeSpan"));
+
+            options.Password.RequireDigit = configuration
+                .GetValue<bool>("IdentityOptions:Password:RequireDigit");
+            options.Password.RequireUppercase = configuration
+                .GetValue<bool>("IdentityOptions:Password:RequireUppercase");
+            options.Password.RequireLowercase = configuration
+                .GetValue<bool>("IdentityOptions:Password:RequireLowercase");
+            options.Password.RequireNonAlphanumeric = configuration
+                .GetValue<bool>("IdentityOptions:Password:RequireNonAlphanumeric");
+            options.Password.RequiredLength = configuration
+                .GetValue<int>("IdentityOptions:Password:RequiredLength");
+            options.Password.RequiredUniqueChars = configuration
+                .GetValue<int>("IdentityOptions:Password:RequiredUniqueChars");
         }
     }
 }
