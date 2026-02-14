@@ -49,6 +49,7 @@ dotnet restore
 
 3) 🗄️ Database Setup (Recommended: Docker SQL Server):
 Start SQL Server container:
+cd BakaryProject2026   # repo root where docker-compose.yml is
 docker compose up -d
 The repository includes `appsettings.json` with a placeholder connection string.
 
@@ -62,10 +63,11 @@ Create **locally** an `appsettings.Development.json` (this file is ignored by gi
 }
 
 4) Run migrations using Development environment:
-ASPNETCORE_ENVIRONMENT=Development dotnet ef database update --project ./FreshNFluffy/FreshNFluffy.csproj --startup-project ./FreshNFluffy/FreshNFluffy.csproj
+$env:ASPNETCORE_ENVIRONMENT="Development"
+dotnet ef database update --project ./FreshNFluffy/FreshNFluffy.csproj --startup-project ./FreshNFluffy/FreshNFluffy.csproj
 
 5) Run the app:
-dotnet run
+dotnet run --project ./FreshNFluffy/FreshNFluffy.csproj
 
 Then open the shown URL (example):
 https://localhost:7249
