@@ -36,7 +36,7 @@ Users can browse products, create order requests, add items, and track order sta
 
 ### 1) Prerequisites
 - **.NET SDK** (recommended: .NET 8)
-- **SQL Server** (LocalDB or full instance)
+- **SQL Server** (Docker / local instance)
 - (Optional) **Visual Studio 2022** / VS Code
 
 ### 2) Clone the repository
@@ -44,21 +44,27 @@ Users can browse products, create order requests, add items, and track order sta
 git clone https://github.com/Viktorborisovv/FreshNFluffy.git
 cd FreshNFluffy
 
-3) Restore dependencies
+Restore dependencies:
 dotnet restore
 
-4) Configure database connection
-Open appsettings.json and set a connection string.
-Example (LocalDB):
+3) 🗄️ Database Setup (Recommended: Docker SQL Server):
+Start SQL Server container:
+docker compose up -d
+The repository includes `appsettings.json` with a placeholder connection string.
+
+Create **locally** an `appsettings.Development.json` (this file is ignored by git) and put your real SQL Server credentials:
+
 ```json
-"ConnectionStrings": {
-  "DefaultConnection": "your-connection-string-here"
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost,1433;Database=FreshNFluffyDb;User Id=sa;Password=YourPasswordHere;TrustServerCertificate=True;Encrypt=False;MultipleActiveResultSets=True"
+  }
 }
 
-4) Apply migrations
-dotnet ef database update
+4) Run migrations using Development environment:
+ASPNETCORE_ENVIRONMENT=Development dotnet ef database update --project ./FreshNFluffy/FreshNFluffy.csproj --startup-project ./FreshNFluffy/FreshNFluffy.csproj
 
-5) Run the app
+5) Run the app:
 dotnet run
 
 Then open the shown URL (example):
