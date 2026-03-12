@@ -2,7 +2,7 @@
 {
     using FreshNFluffy.Services.Interfaces;
     using FreshNFluffy.ViewModels.Products;
-
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     public class ProductsController : Controller
     {
@@ -13,6 +13,7 @@
             this.productService = productService;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] ProductQueryViewModel query)
         {
@@ -21,6 +22,7 @@
             return View(model);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
@@ -34,6 +36,7 @@
             return View(model);
         }
 
+        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -42,6 +45,7 @@
             return View(model);
         }
 
+        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductFormViewModel model)
@@ -67,6 +71,7 @@
             return RedirectToAction(nameof(Details), new { id = newId });
         }
 
+        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -80,6 +85,7 @@
             return View(model);
         }
 
+        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ProductFormViewModel model)
@@ -100,9 +106,10 @@
                 return BadRequest();
             }
 
-            return RedirectToAction(nameof(Details), new { id = model.ProductId });
+            return RedirectToAction(nameof(Index), new { id = model.ProductId });
         }
 
+        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -116,6 +123,7 @@
             return View(model);
         }
 
+        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

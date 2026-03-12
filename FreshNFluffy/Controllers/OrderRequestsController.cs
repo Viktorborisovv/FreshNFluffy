@@ -18,6 +18,7 @@
             this.orderService = orderService;
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Create()
         {
@@ -29,6 +30,7 @@
             return View(model);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> AddItems(int id)
         {
@@ -52,6 +54,7 @@
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(OrderCreateViewModel model)
@@ -72,6 +75,7 @@
             return RedirectToAction(nameof(AddItems), new { id = orderId });
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddItem(AddOrderItemViewModel model)
@@ -96,6 +100,7 @@
             return RedirectToAction(nameof(AddItems), new { id = orderRequestId });
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Summary(int id)
         {
@@ -109,6 +114,7 @@
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateItemQuantity(int orderItemId, int orderRequestId, int newQuantity)
@@ -126,6 +132,7 @@
             return RedirectToAction(nameof(AddItems), new { id = orderRequestId });
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveItem(int orderItemId, int orderRequestId)
@@ -143,6 +150,7 @@
             return RedirectToAction(nameof(AddItems), new { id = orderRequestId });
         }
 
+        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
         [HttpGet]
         public async Task<IActionResult> Manage(int? statusFilter, string? searchTerm)
         {
@@ -151,6 +159,7 @@
             return View(model);
         }
 
+        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(int orderRequestId, int newStatus)
@@ -177,7 +186,9 @@
             return RedirectToAction(nameof(Manage));
         }
 
+        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             if(id <= 0)

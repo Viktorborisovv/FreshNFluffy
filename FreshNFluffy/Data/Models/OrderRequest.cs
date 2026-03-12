@@ -1,6 +1,7 @@
 ﻿namespace FreshNFluffy.Data.Models
 {
     using FreshNFluffy.Data.Models.Enum;
+    using Microsoft.AspNetCore.Identity;
     using System.ComponentModel.DataAnnotations;
 
     using static FreshNFluffy.Common.EntityValidation.OrderRequest;
