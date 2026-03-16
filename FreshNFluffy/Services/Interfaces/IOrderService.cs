@@ -7,7 +7,7 @@
 
     public interface IOrderService
     {
-        Task<int> CreateOrderAsync(OrderCreateViewModel model);
+        Task<int> CreateOrderAsync(OrderCreateViewModel model, string userId);
 
         Task<AddOrderItemViewModel?> GetAddItemsFormAsync(int orderRequestId);
         Task<bool> AddItemAsync(AddOrderItemInputModel model);

@@ -19,7 +19,7 @@
             this.dbContext = dbContext;
         }
 
-        public async Task<int> CreateOrderAsync(OrderCreateViewModel model)
+        public async Task<int> CreateOrderAsync(OrderCreateViewModel model, string userId)
         {
             OrderRequest order = new OrderRequest
             {
@@ -28,12 +28,14 @@
                 PickupDate = model.PickupDate,
                 Notes = model.Notes,
                 CreatedOn = DateTime.UtcNow,
-                Status = OrderStatus.Pending
+                Status = OrderStatus.Pending,
+                UserId = userId
             };
 
             dbContext.OrderRequests.Add(order);
 
             await dbContext.SaveChangesAsync();
+
             return order.OrderRequestId;
         }
         public async Task<AddOrderItemViewModel?> GetAddItemsFormAsync(int orderRequestId)

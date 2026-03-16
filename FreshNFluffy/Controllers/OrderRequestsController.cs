@@ -1,13 +1,14 @@
 ﻿namespace FreshNFluffy.Controllers
 {
-    using FreshNFluffy.Data.Models.Enum;
-
     using FreshNFluffy.Services.Interfaces;
-
     using FreshNFluffy.ViewModels.Orders;
     using FreshNFluffy.ViewModels.Orders.Management;
-    using Microsoft.AspNetCore.Authorization;
+    using FreshNFluffy.Data.Models.Enum;
+
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
+
+    using System.Security.Claims;
 
     public class OrderRequestsController : Controller
     {
@@ -28,6 +29,34 @@
             };
 
             return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(OrderCreateViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            int orderId = await orderService.CreateOrderAsync(model, userId);
+
+            if (orderId <= 0)
+            {
+                ModelState.AddModelError("", "Could not create order");
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(AddItems), new { id = orderId });
         }
 
         [Authorize]
@@ -52,27 +81,6 @@
             }
 
             return View(model);
-        }
-
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(OrderCreateViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            int orderId = await orderService.CreateOrderAsync(model);
-
-            if (orderId <= 0)
-            {
-                ModelState.AddModelError("", "Could not create order");
-                return View(model);
-            }
-
-            return RedirectToAction(nameof(AddItems), new { id = orderId });
         }
 
         [Authorize]
