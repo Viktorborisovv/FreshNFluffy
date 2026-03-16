@@ -27,6 +27,10 @@
 
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
 
+        public string? UserId { get; set; }
+
+        public virtual IdentityUser? User { get; set; }
+
         public virtual ICollection<OrderItem> Items { get; set; } =
             new HashSet<OrderItem>();
     }
