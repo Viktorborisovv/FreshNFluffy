@@ -23,5 +23,7 @@
         Task<bool> UpdateStatusAsync(int orderRequestId, OrderStatus newStatus);
 
         Task<OrderDetailsViewModel?> GetDetailsForManagementAsync(int orderRequestId);
+
+        Task<bool> UserCanAccessOrderAsync(int orderRequestId, string userId, bool isAdmin);
     }
 }

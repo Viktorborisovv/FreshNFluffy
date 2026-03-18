@@ -374,5 +374,17 @@
                           (o.Status == OrderStatus.Completed || o.Status == OrderStatus.Cancelled));
         }
 
+        public async Task<bool> UserCanAccessOrderAsync(int orderRequestId, string userId, bool isAdmin)
+        {
+            if(isAdmin)
+            {
+                return true;
+            }
+
+            return await dbContext
+                .OrderRequests
+                .AsNoTracking()
+                .AnyAsync(or => or.OrderRequestId == orderRequestId && or.UserId == userId);
+        }
     }
 }

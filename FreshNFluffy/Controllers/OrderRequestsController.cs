@@ -68,6 +68,20 @@
                 return BadRequest();
             }
 
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            bool hasAccess = await orderService.UserCanAccessOrderAsync(id, userId, User.IsInRole("Administrator"));
+
+            if (!hasAccess)
+            {
+                return Forbid();
+            }
+
             AddOrderItemViewModel? model = await orderService.GetAddItemsFormAsync(id);
 
             if (model == null)
@@ -98,10 +112,10 @@
 
             bool isItemAddedSuccessfully = await orderService.AddItemAsync(model.NewItem);
 
-            if(!isItemAddedSuccessfully)
+            if (!isItemAddedSuccessfully)
             {
                 TempData["Error"] = "Cannot add item. The order may be locked or the selected product is invalid.";
-                return RedirectToAction(nameof(AddItems), new {id = orderRequestId});
+                return RedirectToAction(nameof(AddItems), new { id = orderRequestId });
             }
 
             TempData["Success"] = "Item added successfully";
@@ -112,6 +126,25 @@
         [HttpGet]
         public async Task<IActionResult> Summary(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if(string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            bool hasAccess = await orderService.UserCanAccessOrderAsync(id, userId, User.IsInRole("Administrator"));
+
+            if (!hasAccess)
+            {
+                return Forbid();
+            }
+
             OrderSummaryViewModel? model = await orderService.GetSummaryAsync(id);
 
             if (model == null)
@@ -177,7 +210,7 @@
                 return BadRequest();
             }
 
-            if(!Enum.IsDefined(typeof(OrderStatus), newStatus))
+            if (!Enum.IsDefined(typeof(OrderStatus), newStatus))
             {
                 return BadRequest();
             }
@@ -199,13 +232,13 @@
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
-            if(id <= 0)
+            if (id <= 0)
             {
                 return BadRequest();
             }
 
             OrderDetailsViewModel? model = await orderService.GetDetailsForManagementAsync(id);
-           
+
             if (model == null)
             {
                 return NotFound();
