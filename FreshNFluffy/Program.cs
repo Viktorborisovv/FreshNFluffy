@@ -1,5 +1,6 @@
 namespace FreshNFluffy
 {
+    using FreshNFluffy.Common;
     using FreshNFluffy.Data;
     using FreshNFluffy.Services;
     using FreshNFluffy.Services.Interfaces;
@@ -7,10 +8,11 @@ namespace FreshNFluffy
     using Microsoft.AspNetCore.Identity;
 
     using Microsoft.EntityFrameworkCore;
+    using System.Threading.Tasks;
 
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +61,12 @@ namespace FreshNFluffy
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+
+            using (IServiceScope scope = app.Services.CreateScope())
+            {
+                IServiceProvider services = scope.ServiceProvider;
+                await RoleSeeder.SeedRolesAsync(services);
+            }
 
             app.Run();
         }
