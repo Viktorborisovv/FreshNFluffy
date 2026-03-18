@@ -1,4 +1,4 @@
-﻿namespace FreshNFluffy.Common
+﻿namespace FreshNFluffy.Data.Seeding
 {
     using Microsoft.AspNetCore.Identity;
     public static class RoleSeeder

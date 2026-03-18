@@ -36,7 +36,7 @@
             return View(model);
         }
 
-        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -45,7 +45,7 @@
             return View(model);
         }
 
-        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductFormViewModel model)
@@ -71,7 +71,7 @@
             return RedirectToAction(nameof(Details), new { id = newId });
         }
 
-        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -85,7 +85,7 @@
             return View(model);
         }
 
-        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ProductFormViewModel model)
@@ -109,7 +109,7 @@
             return RedirectToAction(nameof(Index), new { id = model.ProductId });
         }
 
-        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -123,7 +123,7 @@
             return View(model);
         }
 
-        //TODO -> Uncomment once the admin roles are implemented [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -1,7 +1,7 @@
 namespace FreshNFluffy
 {
-    using FreshNFluffy.Common;
     using FreshNFluffy.Data;
+    using FreshNFluffy.Data.Seeding;
     using FreshNFluffy.Services;
     using FreshNFluffy.Services.Interfaces;
 
@@ -66,6 +66,14 @@ namespace FreshNFluffy
             {
                 IServiceProvider services = scope.ServiceProvider;
                 await RoleSeeder.SeedRolesAsync(services);
+            }
+
+            using (IServiceScope scope = app.Services.CreateScope())
+            {
+                IServiceProvider services = scope.ServiceProvider;
+
+                await RoleSeeder.SeedRolesAsync(services);
+                await UserSeeder.SeedAdminAsync(services);
             }
 
             app.Run();

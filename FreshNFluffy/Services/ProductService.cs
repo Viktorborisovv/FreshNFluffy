@@ -99,7 +99,7 @@
         //Create action
         public async Task<ProductFormViewModel> GetCreateFormAsync()
         {
-            var categories = await dbContext.Categories
+            List<CategorySelectViewModel> categories = await dbContext.Categories
                 .AsNoTracking()
                 .OrderBy(c => c.Name)
                 .Select(c => new CategorySelectViewModel
@@ -123,7 +123,7 @@
             if (!categoryExists)
                 return 0;
 
-            var product = new Product
+            Product product = new Product
             {
                 Name = model.Name,
                 Description = model.Description,
