@@ -1,0 +1,30 @@
+﻿@page
+@{
+	ViewData["Title"] = "Access Denied";
+}
+
+<section class="container py-5">
+	<div class="ff-glass p-4">
+		<div class="row justify-content-center">
+			<div class="col-lg-8">
+				<div class="ff-card p-5 text-center">
+					<h1 class="display-5 fw-bold text-danger mb-3">Access Denied</h1>
+
+					<p class="fs-5 mb-4 text-dark">
+						You do not have permission to access this resource.
+					</p>
+
+					<div class="d-flex justify-content-center gap-3 flex-wrap">
+						<a asp-controller="Home" asp-action="Index" class="btn btn-primary px-4">
+							Go to Home
+						</a>
+
+						<a asp-controller="Products" asp-action="Index" class="btn btn-secondary px-4">
+							Browse Products
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
