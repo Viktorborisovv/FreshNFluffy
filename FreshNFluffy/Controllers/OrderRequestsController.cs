@@ -104,6 +104,21 @@
         {
             int orderRequestId = model.NewItem.OrderRequestId;
 
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            bool hasAccess = await orderService
+                .UserCanAccessOrderAsync(orderRequestId, userId, User.IsInRole("Administrator"));
+
+            if (!hasAccess)
+            {
+                return Forbid();
+            }
+
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = "Please select a product and enter a valid quantity (1–100).";
@@ -133,7 +148,7 @@
 
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if(string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized();
             }
@@ -160,7 +175,22 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateItemQuantity(int orderItemId, int orderRequestId, int newQuantity)
         {
-            bool isQuantityUpdatedSuccessfully =
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            bool hasAccess = await orderService
+                .UserCanAccessOrderAsync(orderRequestId, userId, User.IsInRole("Administrator"));
+
+            if (!hasAccess)
+            {
+                return Forbid();
+            }
+
+                bool isQuantityUpdatedSuccessfully =
                 await orderService.UpdateItemQuantityAsync(orderItemId, newQuantity);
 
             if (!isQuantityUpdatedSuccessfully)
@@ -178,6 +208,21 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveItem(int orderItemId, int orderRequestId)
         {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            bool hasAccess = await orderService
+                .UserCanAccessOrderAsync(orderRequestId, userId, User.IsInRole("Administrator"));
+
+            if (!hasAccess)
+            {
+                return Forbid();
+            }
+
             bool isItemRemovedSuccessfully =
                 await orderService.RemoveItemAsync(orderItemId);
 
