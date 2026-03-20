@@ -8,7 +8,7 @@
 
     using FreshNFluffy.ViewModels.Categories;
     using FreshNFluffy.ViewModels.Products;
-
+    using FreshNFluffy.ViewModels.Reviews;
     using Microsoft.EntityFrameworkCore;
 
     public class ProductService : IProductService
@@ -93,6 +93,8 @@
             return await dbContext.Products
                 .AsNoTracking()
                 .Include(p => p.Category)
+                .Include(p => p.Reviews)
+                .ThenInclude(r => r.User)
                 .Where(p => p.ProductId == id)
                 .Select(p => new ProductDetailsViewModel
                 {
@@ -102,7 +104,23 @@
                     Price = p.Price,
                     ImageUrl = p.ImageUrl,
                     CategoryName = p.Category.Name,
-                    NutritionText = p.NutritionTypes.ToString()
+                    NutritionText = p.NutritionTypes.ToString(),
+
+                    Reviews = p.Reviews
+                        .OrderByDescending(r => r.CreatedOn)
+                        .Select(r => new ReviewListItemViewModel
+                        {
+                            Rating = r.Rating,
+                            Comment = r.Comment,
+                            UserName = r.User.UserName!,
+                            CreatedOn = r.CreatedOn
+                        })
+                        .ToList(),
+
+                    NewReview = new CreateReviewViewModel
+                    {
+                        ProductId = p.ProductId
+                    }
                 })
                 .FirstOrDefaultAsync();
         }

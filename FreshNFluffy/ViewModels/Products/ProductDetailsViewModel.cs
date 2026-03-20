@@ -1,4 +1,6 @@
-﻿namespace FreshNFluffy.ViewModels.Products
+﻿using FreshNFluffy.ViewModels.Reviews;
+
+namespace FreshNFluffy.ViewModels.Products
 {
     public class ProductDetailsViewModel
     {
@@ -10,5 +12,11 @@
 
         public string CategoryName { get; set; } = null!;
         public string NutritionText { get; set; } = "None";
+
+        public IEnumerable<ReviewListItemViewModel> Reviews { get; set; }
+            = new List<ReviewListItemViewModel>();
+
+        public CreateReviewViewModel NewReview { get; set; } 
+            = new CreateReviewViewModel();
     }
 }

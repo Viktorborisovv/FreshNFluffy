@@ -34,6 +34,7 @@ namespace FreshNFluffy
 
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
 
             WebApplication app = builder.Build();
 
