@@ -2,13 +2,12 @@
 {
     using FreshNFluffy.Services.Interfaces;
     using FreshNFluffy.ViewModels.Orders;
-    using FreshNFluffy.ViewModels.Orders.Management;
-    using FreshNFluffy.Data.Models.Enum;
 
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Authorization;
 
     using System.Security.Claims;
+
 
     public class OrderRequestsController : Controller
     {
@@ -234,62 +233,6 @@
 
             TempData["Success"] = "Item removed successfully.";
             return RedirectToAction(nameof(AddItems), new { id = orderRequestId });
-        }
-
-        [Authorize(Roles = "Administrator")]
-        [HttpGet]
-        public async Task<IActionResult> Manage(int? statusFilter, string? searchTerm)
-        {
-            OrderListViewModel model = await orderService.GetAllForManagementAsync(statusFilter, searchTerm);
-
-            return View(model);
-        }
-
-        [Authorize(Roles = "Administrator")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateStatus(int orderRequestId, int newStatus)
-        {
-            if (orderRequestId <= 0)
-            {
-                return BadRequest();
-            }
-
-            if (!Enum.IsDefined(typeof(OrderStatus), newStatus))
-            {
-                return BadRequest();
-            }
-
-            OrderStatus requestedStatus = (OrderStatus)newStatus;
-
-            bool isStatusUpdatedSuccessfully =
-                await orderService.UpdateStatusAsync(orderRequestId, requestedStatus);
-
-            if (!isStatusUpdatedSuccessfully)
-            {
-                return BadRequest();
-            }
-            return RedirectToAction(nameof(Manage));
-        }
-
-        [Authorize(Roles = "Administrator")]
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> Details(int id)
-        {
-            if (id <= 0)
-            {
-                return BadRequest();
-            }
-
-            OrderDetailsViewModel? model = await orderService.GetDetailsForManagementAsync(id);
-
-            if (model == null)
-            {
-                return NotFound();
-            }
-
-            return View(model);
         }
     }
 }
