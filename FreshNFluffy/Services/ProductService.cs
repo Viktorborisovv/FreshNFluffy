@@ -45,22 +45,32 @@
             if (!string.IsNullOrWhiteSpace(query.Search))
             {
                 string search = query.Search.Trim();
+
                 productsQuery = productsQuery
                        .Where(p => p.Name.Contains(search)
                        || (p.Description != null
                        && p.Description.Contains(search)));
             }
 
-             if (query.NutritionTypes.HasValue && query.NutritionTypes.Value != 0)
+            if (query.NutritionTypes.HasValue && query.NutritionTypes.Value != 0)
             {
                 int selected = query.NutritionTypes.Value;
                 productsQuery = productsQuery
                        .Where(p => (((int)p.NutritionTypes) & selected) == selected);
             }
 
+            if (query.CurrentPage <= 0)
+            {
+                query.CurrentPage = 1;
+            }
+
+            query.TotalProducts = await productsQuery.CountAsync();
+
             query.Products = await productsQuery
                 .OrderBy(p => p.Category.Name)
                 .ThenBy(p => p.Name)
+                .Skip((query.CurrentPage - 1) * query.ProductsPerPage)
+                .Take(query.ProductsPerPage)
                 .Select(p => new ProductListItemViewModel
                 {
                     ProductId = p.ProductId,
@@ -175,13 +185,13 @@
         }
         public async Task<bool> EditAsync(ProductFormViewModel model)
         {
-            if(model.ProductId == null)
+            if (model.ProductId == null)
                 return false;
 
             Product? product = await dbContext.Products
                 .FirstOrDefaultAsync(p => p.ProductId == model.ProductId.Value);
 
-            if(product == null)
+            if (product == null)
                 return false;
 
             bool categoryExists = await dbContext.Categories

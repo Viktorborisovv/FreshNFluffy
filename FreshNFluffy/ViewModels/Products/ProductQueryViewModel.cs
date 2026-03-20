@@ -8,6 +8,10 @@ namespace FreshNFluffy.ViewModels.Products
         public int? NutritionTypes { get; set; }
         public string? Search { get; set; }
 
+        public int CurrentPage { get; set; } = 1;
+        public int ProductsPerPage { get; set; } = 6;
+        public int TotalProducts { get; set; }
+ 
 
         public IEnumerable<CategorySelectViewModel> Categories { get; set; }
         = new List<CategorySelectViewModel>();
