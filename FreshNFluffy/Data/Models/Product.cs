@@ -32,5 +32,8 @@
         public virtual Category Category { get; set; } = null!;
 
         public NutritionTypes NutritionTypes { get; set; } = NutritionTypes.None;
+
+        public virtual ICollection<Review> Reviews { get; set; } =
+            new HashSet<Review>();
     }
 }

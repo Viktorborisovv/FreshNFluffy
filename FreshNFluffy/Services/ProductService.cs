@@ -55,6 +55,7 @@
             if (query.NutritionTypes.HasValue && query.NutritionTypes.Value != 0)
             {
                 int selected = query.NutritionTypes.Value;
+
                 productsQuery = productsQuery
                        .Where(p => (((int)p.NutritionTypes) & selected) == selected);
             }

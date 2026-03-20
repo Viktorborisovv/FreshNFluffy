@@ -33,5 +33,13 @@
             public const int QuantityMin = 1;
             public const int QuantityMax = 100;
         }
+
+        public static class Review
+        {
+            public const int CommentMinLength = 10;
+            public const int CommentMaxLength = 1000;
+            public const int RatingMin = 1;
+            public const int RatingMax = 5;
+        }
     }
 }
