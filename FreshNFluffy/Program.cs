@@ -55,6 +55,8 @@ namespace FreshNFluffy
 
             app.UseRouting();
 
+            app.UseStatusCodePagesWithReExecute("/Home/NotFoundPage");
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -78,7 +80,7 @@ namespace FreshNFluffy
                 IServiceProvider services = scope.ServiceProvider;
 
                 await RoleSeeder.SeedRolesAsync(services);
-                await UserSeeder.SeedAdminAsync(services);
+                await AdminSeeder.SeedAdminAsync(services);
             }
 
             app.Run();

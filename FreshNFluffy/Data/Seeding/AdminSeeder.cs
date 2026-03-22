@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace FreshNFluffy.Data.Seeding
 {
-    public static class UserSeeder
+    public static class AdminSeeder
     {
         public static async Task SeedAdminAsync(IServiceProvider serviceProvider)
         {

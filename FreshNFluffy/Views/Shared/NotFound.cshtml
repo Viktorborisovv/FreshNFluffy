@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Page Not Found";
+}
+
+<div class="ff-glass p-5 text-center">
+    <h1 class="text-danger display-5 fw-bold mb-3">404</h1>
+    <h2 class="text-danger mb-3">Page Not Found</h2>
+    <p class="text-dark mb-4">
+        The page you are looking for does not exist or may have been moved.
+    </p>
+
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-primary">
+            Back to Home
+        </a>
+
+        <a asp-area="" asp-controller="Products" asp-action="Index" class="btn btn-secondary">
+            Browse Products
+        </a>
+    </div>
+</div>

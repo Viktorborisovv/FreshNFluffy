@@ -23,6 +23,11 @@ namespace FreshNFluffy.Controllers
             return View();
         }
 
+        public IActionResult NotFoundPage()
+        {
+            return View("NotFound");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
