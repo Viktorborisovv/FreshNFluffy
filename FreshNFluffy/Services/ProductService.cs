@@ -3,7 +3,7 @@
     using FreshNFluffy.Data;
     using FreshNFluffy.Data.Models;
     using FreshNFluffy.Data.Models.Enum;
-
+    using FreshNFluffy.Data.Repository.Contracts;
     using FreshNFluffy.Services.Interfaces;
 
     using FreshNFluffy.ViewModels.Categories;
@@ -13,28 +13,18 @@
 
     public class ProductService : IProductService
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly IProductRepository productRepository;
 
-        public ProductService(ApplicationDbContext dbContext)
+        public ProductService(IProductRepository productRepository)
         {
-            this.dbContext = dbContext;
+            this.productRepository = productRepository;
         }
 
         public async Task<ProductQueryViewModel> GetAllAsync(ProductQueryViewModel query)
         {
-            query.Categories = await dbContext.Categories
-                .AsNoTracking()
-                .OrderBy(c => c.Name)
-                .Select(c => new CategorySelectViewModel
-                {
-                    CategoryId = c.CategoryId,
-                    Name = c.Name
-                })
-                .ToListAsync();
+            query.Categories = await productRepository.GetAllCategoriesAsync();
 
-            IQueryable<Product> productsQuery = dbContext.Products
-                .AsNoTracking()
-                .Include(p => p.Category);
+            IQueryable<Product> productsQuery = productRepository.GetAllAsQueryable();
 
             if (query.CategoryId.HasValue)
             {
@@ -90,23 +80,24 @@
 
         public async Task<ProductDetailsViewModel?> GetDetailsAsync(int id)
         {
-            return await dbContext.Products
-                .AsNoTracking()
-                .Include(p => p.Category)
-                .Include(p => p.Reviews)
-                .ThenInclude(r => r.User)
-                .Where(p => p.ProductId == id)
-                .Select(p => new ProductDetailsViewModel
-                {
-                    ProductId = p.ProductId,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Price = p.Price,
-                    ImageUrl = p.ImageUrl,
-                    CategoryName = p.Category.Name,
-                    NutritionText = p.NutritionTypes.ToString(),
+            Product? product = await productRepository.GetByIdWithCategoryAndReviewsAsync(id);
 
-                    Reviews = p.Reviews
+            if (product == null)
+            {
+                return null;
+            }
+
+            return new ProductDetailsViewModel
+            {
+                ProductId = product.ProductId,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                ImageUrl = product.ImageUrl,
+                CategoryName = product.Category.Name,
+                NutritionText = product.NutritionTypes.ToString(),
+
+                Reviews = product.Reviews
                         .OrderByDescending(r => r.CreatedOn)
                         .Select(r => new ReviewListItemViewModel
                         {
@@ -117,40 +108,29 @@
                         })
                         .ToList(),
 
-                    NewReview = new CreateReviewViewModel
-                    {
-                        ProductId = p.ProductId
-                    }
-                })
-                .FirstOrDefaultAsync();
+                NewReview = new CreateReviewViewModel
+                {
+                    ProductId = product.ProductId
+                }
+            };
         }
 
         //Create action
         public async Task<ProductFormViewModel> GetCreateFormAsync()
         {
-            List<CategorySelectViewModel> categories = await dbContext.Categories
-                .AsNoTracking()
-                .OrderBy(c => c.Name)
-                .Select(c => new CategorySelectViewModel
-                {
-                    CategoryId = c.CategoryId,
-                    Name = c.Name,
-                })
-                .ToListAsync();
-
             return new ProductFormViewModel
             {
-                Categories = categories
+                Categories = await productRepository.GetAllCategoriesAsync()
             };
         }
         public async Task<int> CreateAsync(ProductFormViewModel model)
         {
-            bool categoryExists = await dbContext.Categories
-                .AsNoTracking()
-                .AnyAsync(c => c.CategoryId == model.CategoryId);
+            bool categoryExists = await productRepository.CategoryExistsAsnyc(model.CategoryId);
 
             if (!categoryExists)
+            {
                 return 0;
+            }
 
             Product product = new Product
             {
@@ -162,8 +142,8 @@
                 NutritionTypes = (NutritionTypes)model.NutritionTypes
             };
 
-            dbContext.Products.Add(product);
-            await dbContext.SaveChangesAsync();
+            await productRepository.AddAsync(product);
+            await productRepository.SaveChangesAsync();
 
             return product.ProductId;
         }
@@ -171,24 +151,12 @@
         //Edit action
         public async Task<ProductFormViewModel?> GetEditFormAsync(int id)
         {
-            Product? product = await dbContext.Products
-                .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.ProductId == id);
+            Product? product = await productRepository.GetByIdAsync(id);
 
             if (product == null)
             {
                 return null;
             }
-
-            List<CategorySelectViewModel> categories = await dbContext.Categories
-                .AsNoTracking()
-                .OrderBy(c => c.Name)
-                .Select(c => new CategorySelectViewModel
-                {
-                    CategoryId = c.CategoryId,
-                    Name = c.Name,
-                })
-                .ToListAsync();
 
             return new ProductFormViewModel
             {
@@ -199,26 +167,29 @@
                 ImageUrl = product.ImageUrl,
                 CategoryId = product.CategoryId,
                 NutritionTypes = (int)product.NutritionTypes,
-                Categories = categories
+                Categories = await productRepository.GetAllCategoriesAsync()
             };
         }
         public async Task<bool> EditAsync(ProductFormViewModel model)
         {
-            if (model.ProductId == null)
+            if(!model.ProductId.HasValue)
+            {
                 return false;
+            }
 
-            Product? product = await dbContext.Products
-                .FirstOrDefaultAsync(p => p.ProductId == model.ProductId.Value);
+            Product? product = await productRepository.GetByIdAsync(model.ProductId.Value);
 
             if (product == null)
+            {
                 return false;
+            }
 
-            bool categoryExists = await dbContext.Categories
-                .AsNoTracking()
-                .AnyAsync(c => c.CategoryId == model.CategoryId);
+            bool categoryExists = await productRepository.CategoryExistsAsnyc(model.CategoryId);
 
             if (!categoryExists)
+            {
                 return false;
+            }
 
             product.Name = model.Name;
             product.Description = model.Description;
@@ -227,50 +198,52 @@
             product.CategoryId = model.CategoryId;
             product.NutritionTypes = (NutritionTypes)model.NutritionTypes;
 
-            await dbContext.SaveChangesAsync();
+            await productRepository.SaveChangesAsync();
             return true;
         }
 
         //Delete action
         public async Task<ProductDetailsViewModel?> GetDeleteAsync(int id)
         {
-            return await dbContext.Products
-                .AsNoTracking()
-                .Include(p => p.Category)
-                .Where(p => p.ProductId == id)
-                .Select(p => new ProductDetailsViewModel
-                {
-                    ProductId = p.ProductId,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Price = p.Price,
-                    ImageUrl = p.ImageUrl,
-                    CategoryName = p.Category.Name,
-                    NutritionText = p.NutritionTypes.ToString()
-                })
-                .FirstOrDefaultAsync();
+            Product? product = await productRepository.GetByIdWithCategoryAsync(id);
+
+            if (product == null)
+            {
+                return null;
+            }
+
+            return new ProductDetailsViewModel
+            {
+                ProductId = product.ProductId,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                ImageUrl = product.ImageUrl,
+                CategoryName = product.Category.Name,
+                NutritionText = product.NutritionTypes.ToString()
+            };
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            Product? product = await dbContext.Products
-                .FirstOrDefaultAsync(p => p.ProductId == id);
+            Product? product = await productRepository.GetByIdAsync(id);
 
             if (product == null)
-                return false;
-
-            dbContext.Products.Remove(product);
-
-            try
-            {
-                await dbContext.SaveChangesAsync();
-                return true;
-            }
-            catch
             {
                 return false;
             }
+                
+            bool isUsedInOrders = await productRepository.ProductIsUsedInOrdersAsync(id);
+
+            if (isUsedInOrders)
+            {
+                return false;
+            }
+
+            productRepository.Remove(product);
+            await productRepository.SaveChangesAsync();
+
+            return true;
         }
-
     }
 }

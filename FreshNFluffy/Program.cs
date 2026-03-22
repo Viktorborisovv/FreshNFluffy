@@ -1,6 +1,8 @@
 namespace FreshNFluffy
 {
     using FreshNFluffy.Data;
+    using FreshNFluffy.Data.Repository;
+    using FreshNFluffy.Data.Repository.Contracts;
     using FreshNFluffy.Data.Seeding;
     using FreshNFluffy.Services;
     using FreshNFluffy.Services.Interfaces;
@@ -35,6 +37,7 @@ namespace FreshNFluffy
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IReviewService, ReviewService>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
             WebApplication app = builder.Build();
 
