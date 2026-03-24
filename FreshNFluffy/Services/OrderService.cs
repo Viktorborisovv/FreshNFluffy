@@ -3,6 +3,7 @@
     using FreshNFluffy.Data;
     using FreshNFluffy.Data.Models;
     using FreshNFluffy.Data.Models.Enum;
+    using FreshNFluffy.Data.Repository.Contracts;
 
     using FreshNFluffy.Services.Interfaces;
     using FreshNFluffy.ViewModels.Orders;
@@ -12,11 +13,11 @@
 
     public class OrderService : IOrderService
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly IOrderRepository orderRepository;
 
-        public OrderService(ApplicationDbContext dbContext)
+        public OrderService(IOrderRepository orderRepository)
         {
-            this.dbContext = dbContext;
+            this.orderRepository = orderRepository;
         }
 
         public async Task<int> CreateOrderAsync(OrderCreateViewModel model, string userId)
@@ -32,18 +33,14 @@
                 UserId = userId
             };
 
-            dbContext.OrderRequests.Add(order);
-
-            await dbContext.SaveChangesAsync();
+            await orderRepository.AddOrderRequestAsync(order);
+            await orderRepository.SaveChangesAsync();
 
             return order.OrderRequestId;
         }
         public async Task<AddOrderItemViewModel?> GetAddItemsFormAsync(int orderRequestId)
         {
-            var orderRequest= await dbContext.OrderRequests
-                .AsNoTracking()
-                .Select(o => new { o.OrderRequestId, o.Status })
-                .FirstOrDefaultAsync(oe => oe.OrderRequestId == orderRequestId);
+            OrderRequest? orderRequest = await orderRepository.GetOrderRequestByIdAsNoTrackingAsync(orderRequestId);
 
             if (orderRequest == null)
             {
@@ -54,30 +51,9 @@
                 orderRequest.Status == OrderStatus.Completed || 
                 orderRequest.Status == OrderStatus.Cancelled;
 
-            List<ProductSelectViewModel> products = await dbContext.Products
-                .AsNoTracking()
-                .OrderBy(p => p.Name)
-                .Select(p => new ProductSelectViewModel
-                {
-                    ProductId = p.ProductId,
-                    Name = p.Name,
-                    Price = p.Price
-                })
-                .ToListAsync();
+            IEnumerable<ProductSelectViewModel> products = await orderRepository.GetProductsForOrderAsync();
 
-            List<OrderItemRowViewModel> items = await dbContext.OrderItems
-                .AsNoTracking()
-                .Where(i => i.OrderRequestId == orderRequestId)
-                .Include(i => i.Product)
-                .OrderBy(i => i.OrderItemId)
-                .Select(i => new OrderItemRowViewModel
-                {
-                    OrderItemId = i.OrderItemId,
-                    ProductName = i.Product.Name,
-                    Quantity = i.Quantity,
-                    UnitPrice = i.UnitPrice
-                })
-                .ToListAsync();
+            IEnumerable<OrderItemRowViewModel> items = await orderRepository.GetOrderItemsByOrderRequestIdAsync(orderRequestId);
 
             return new AddOrderItemViewModel
             {
@@ -95,7 +71,7 @@
 
         public async Task<bool> AddItemAsync(AddOrderItemInputModel model)
         {
-            bool isLocked = await IsOrderLockedAsync(model.OrderRequestId);
+            bool isLocked = await orderRepository.IsOrderLockedAsync(model.OrderRequestId);
 
             if (isLocked)
             {
@@ -107,30 +83,28 @@
                 return false;
             }
 
-            bool orderExists = await dbContext.OrderRequests
-                .AsNoTracking()
-                .AnyAsync(o => o.OrderRequestId == model.OrderRequestId);
+            bool orderExists = await orderRepository.OrderRequestExistsAsync(model.OrderRequestId);
 
             if (!orderExists)
+            {
                 return false;
+            }
 
-            Product? product = await dbContext.Products
-                .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.ProductId == model.ProductId);
+            Product? product = await orderRepository.GetProductByIdAsync(model.ProductId);
 
             if (product == null)
+            {
                 return false;
+            }
 
-            OrderItem? existingItem = await dbContext.OrderItems
-                .FirstOrDefaultAsync(ei => ei.OrderRequestId == model.OrderRequestId
-                                        && ei.ProductId == model.ProductId);
-
+            OrderItem? existingItem = await orderRepository.
+                GetOrderItemByOrderAndProductAsync(model.OrderRequestId, model.ProductId);
 
             if (existingItem != null)
             {
                 existingItem.Quantity += model.Quantity;
 
-                await dbContext.SaveChangesAsync();
+                await orderRepository.SaveChangesAsync();
                 return true;
             }
 
@@ -142,35 +116,24 @@
                 UnitPrice = product.Price
             };
 
-            dbContext.OrderItems.Add(newItem);
-
-            await dbContext.SaveChangesAsync();
+            await orderRepository.AddOrderItemAsync(newItem);
+            await orderRepository.SaveChangesAsync();
 
             return true;
         }
 
         public async Task<OrderSummaryViewModel?> GetSummaryAsync(int orderRequestId)
         {
-            OrderRequest? order = await dbContext.OrderRequests
-                .AsNoTracking()
-                .FirstOrDefaultAsync(o => o.OrderRequestId == orderRequestId);
+            OrderRequest? order = await orderRepository.GetOrderRequestByIdAsNoTrackingAsync(orderRequestId);
 
             if (order == null)
+            {
                 return null;
+            }
 
-            List<OrderItemRowViewModel> items = await dbContext.OrderItems
-                .AsNoTracking()
-                .Where(i => i.OrderRequestId == orderRequestId)
-                .Include(i => i.Product)
-                .OrderBy(i => i.OrderItemId)
-                .Select(i => new OrderItemRowViewModel
-                {
-                    OrderItemId = i.OrderItemId,
-                    ProductName = i.Product.Name,
-                    Quantity = i.Quantity,
-                    UnitPrice = i.UnitPrice,
-                })
-                .ToListAsync();
+            List<OrderItemRowViewModel> items = (await orderRepository
+                .GetOrderItemsByOrderRequestIdAsync(orderRequestId))
+                .ToList();
 
             decimal total = items.Sum(i => i.RowTotal);
 
@@ -193,17 +156,14 @@
                 return false;
             }
 
-            OrderItem? orderItemToUpdate = await dbContext
-                .OrderItems
-                .FirstOrDefaultAsync(i => i.OrderItemId == orderItemId);
-
+            OrderItem? orderItemToUpdate = await orderRepository.GetOrderItemByIdAsync(orderItemId);
 
             if (orderItemToUpdate == null)
             {
                 return false;
             }
 
-            bool isLocked = await IsOrderLockedAsync(orderItemToUpdate.OrderRequestId);
+            bool isLocked = await orderRepository.IsOrderLockedAsync(orderItemToUpdate.OrderRequestId);
 
             if (isLocked)
             {
@@ -211,77 +171,37 @@
             }
 
             orderItemToUpdate.Quantity = requestedQuantity;
-
-            await dbContext.SaveChangesAsync();
+            await orderRepository.SaveChangesAsync();
 
             return true;
         }
 
         public async Task<bool> RemoveItemAsync(int orderItemId)
         {
-            OrderItem? orderItemToRemove = await dbContext
-                .OrderItems
-                .FirstOrDefaultAsync(oi => oi.OrderItemId == orderItemId);
+            OrderItem? orderItemToRemove = await orderRepository.GetOrderItemByIdAsync(orderItemId);
 
             if (orderItemToRemove == null)
             {
                 return false;
             }
 
-            bool isLocked = await IsOrderLockedAsync(orderItemToRemove.OrderRequestId);
+            bool isLocked = await orderRepository.IsOrderLockedAsync(orderItemToRemove.OrderRequestId);
 
             if (isLocked)
             {
                 return false;
             }
 
-            dbContext.OrderItems.Remove(orderItemToRemove);
-
-            await dbContext.SaveChangesAsync();
+            orderRepository.RemoveOrderItem(orderItemToRemove);
+            await orderRepository.SaveChangesAsync();
 
             return true;
         }
         public async Task<OrderListViewModel> GetAllForManagementAsync(int? statusFilter, string? searchTerm)
         {
-            IQueryable<OrderRequest> orderRequestsQuery = dbContext
-                .OrderRequests
-                .AsNoTracking();
-
-            if(statusFilter.HasValue)
-            {
-                orderRequestsQuery = orderRequestsQuery.Where(or => (int)or.Status == statusFilter.Value);
-            }
-
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                string term = searchTerm.Trim().ToLower();
-
-                bool isNumber = int.TryParse(term, out int parsedOrderId);
-
-                orderRequestsQuery = orderRequestsQuery.Where(or =>
-                or.CustomerName.Contains(term) ||
-                or.PhoneNumber.Contains(term) ||
-                (isNumber && or.OrderRequestId == parsedOrderId));
-            }
-
-            List<OrderListItemViewModel> ordersForManagement = await orderRequestsQuery
-                .GroupJoin(
-                    dbContext.OrderItems.AsNoTracking(),
-                    orderRequest => orderRequest.OrderRequestId,
-                    orderItem => orderItem.OrderRequestId,
-                    (orderRequest, orderItems) => new OrderListItemViewModel
-                    {
-                        OrderRequestId = orderRequest.OrderRequestId,
-                        CustomerName = orderRequest.CustomerName,
-                        CreatedOn = orderRequest.CreatedOn,
-                        PickupDate = orderRequest.PickupDate,
-                        Status = orderRequest.Status.ToString(),    
-                        StatusValue = (int)orderRequest.Status,
-                        TotalPrice = orderItems.Sum(oi => oi.UnitPrice * oi.Quantity)
-                    })
-                .OrderByDescending(o => o.CreatedOn)
-                .ThenByDescending(o => o.OrderRequestId)
-                .ToListAsync();
+            List<OrderListItemViewModel> ordersForManagement = (await orderRepository
+                .GetOrdersForManagementAsync(statusFilter, searchTerm))
+                .ToList();
 
             return new OrderListViewModel
             {
@@ -293,9 +213,7 @@
 
         public async Task<bool> UpdateStatusAsync(int orderRequestId, OrderStatus newStatus)
         {
-            OrderRequest? orderRequestToUpdate = await dbContext
-                .OrderRequests
-                .FirstOrDefaultAsync(or => or.OrderRequestId == orderRequestId);
+            OrderRequest? orderRequestToUpdate = await orderRepository.GetOrderRequestByIdAsync(orderRequestId);
 
             if (orderRequestToUpdate == null)
             {
@@ -319,36 +237,23 @@
             }
 
             orderRequestToUpdate.Status = newStatus;
-
-            await dbContext.SaveChangesAsync();
+            await orderRepository.SaveChangesAsync();
 
             return true;
         }
 
         public async Task<OrderDetailsViewModel?> GetDetailsForManagementAsync(int orderRequestId)
         {
-            OrderRequest? order = await dbContext.OrderRequests
-                .AsNoTracking()
-                .FirstOrDefaultAsync(o => o.OrderRequestId == orderRequestId);
+            OrderRequest? order = await orderRepository.GetOrderRequestByIdAsNoTrackingAsync(orderRequestId);
 
             if (order == null)
             {
                 return null;
             }
 
-            List<OrderItemRowViewModel> items = await dbContext.OrderItems
-                .AsNoTracking()
-                .Where(i => i.OrderRequestId == orderRequestId)
-                .Include(i => i.Product)
-                .OrderBy(i => i.OrderItemId)
-                .Select(i => new OrderItemRowViewModel
-                {
-                    OrderItemId = i.OrderItemId,
-                    ProductName = i.Product.Name,
-                    Quantity = i.Quantity,
-                    UnitPrice = i.UnitPrice
-                })
-                .ToListAsync();
+            List<OrderItemRowViewModel> items = (await orderRepository
+                .GetOrderItemsByOrderRequestIdAsync(orderRequestId))
+                .ToList();
 
             decimal totalPrice = items.Sum(i => i.RowTotal);
 
@@ -366,13 +271,6 @@
                 TotalPrice = totalPrice
             };
         }
-        private async Task<bool> IsOrderLockedAsync(int orderRequestId)
-        {
-            return await dbContext.OrderRequests
-                .AsNoTracking()
-                .AnyAsync(o => o.OrderRequestId == orderRequestId &&
-                          (o.Status == OrderStatus.Completed || o.Status == OrderStatus.Cancelled));
-        }
 
         public async Task<bool> UserCanAccessOrderAsync(int orderRequestId, string userId, bool isAdmin)
         {
@@ -381,10 +279,7 @@
                 return true;
             }
 
-            return await dbContext
-                .OrderRequests
-                .AsNoTracking()
-                .AnyAsync(or => or.OrderRequestId == orderRequestId && or.UserId == userId);
+            return await orderRepository.UserOwnsOrderAsync(orderRequestId, userId);
         }
     }
 }

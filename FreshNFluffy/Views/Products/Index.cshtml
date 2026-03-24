@@ -47,8 +47,15 @@
 			</select>
 		</div>
 
-		<div class="col-md-2">
+		<div class="col-md-2 d-grid gap-2">
 			<button class="btn btn-info w-100 text-white" type="submit">Filter</button>
+
+			<a class="btn btn-danger w-100"
+			   asp-area=""
+			   asp-controller="Products"
+			   asp-action="Index">
+				Clear
+			</a>
 		</div>
 	</form>
 </div>

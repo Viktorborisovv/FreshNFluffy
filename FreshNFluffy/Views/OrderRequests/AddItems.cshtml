@@ -36,8 +36,8 @@
 				<select class="form-select"
 						asp-for="NewItem.ProductId"
 						asp-items="@(new SelectList(Model.Products,
-																	 	 nameof(FreshNFluffy.ViewModels.Orders.ProductSelectViewModel.ProductId),
-																	 	 nameof(FreshNFluffy.ViewModels.Orders.ProductSelectViewModel.Name)))">
+									 	 nameof(FreshNFluffy.ViewModels.Orders.ProductSelectViewModel.ProductId),
+									 	 nameof(FreshNFluffy.ViewModels.Orders.ProductSelectViewModel.Name)))">
 				<option value="">-- Select product --</option>
 			</select>
 		</div>
