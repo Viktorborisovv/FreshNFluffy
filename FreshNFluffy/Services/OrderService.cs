@@ -1,6 +1,5 @@
 ﻿namespace FreshNFluffy.Services
 {
-    using FreshNFluffy.Data;
     using FreshNFluffy.Data.Models;
     using FreshNFluffy.Data.Models.Enum;
     using FreshNFluffy.Data.Repository.Contracts;
@@ -8,8 +7,6 @@
     using FreshNFluffy.Services.Interfaces;
     using FreshNFluffy.ViewModels.Orders;
     using FreshNFluffy.ViewModels.Orders.Management;
-
-    using Microsoft.EntityFrameworkCore;
 
     public class OrderService : IOrderService
     {
