@@ -9,7 +9,6 @@
     using FreshNFluffy.Data.Repository;
 
     using Microsoft.EntityFrameworkCore;
-    using System.Formats.Asn1;
 
     public class ProductServiceTests
     {
