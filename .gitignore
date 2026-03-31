@@ -9,6 +9,9 @@
 bin/
 obj/
 FreshNFluffy_Test/
+CoverageReport/
+CoverageReportFiltered/
+TestResults/
 
 # Rider
 .idea/
