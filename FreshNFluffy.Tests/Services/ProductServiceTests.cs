@@ -87,7 +87,7 @@
             //Arrange
 
             DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             await using ApplicationDbContext dbContext = new ApplicationDbContext(options);
@@ -111,7 +111,7 @@
                 Description = "Rich chocolate cake",
                 Price = 12.50m,
                 CategoryId = 1,
-                Category = category, 
+                Category = category,
                 NutritionTypes = NutritionTypes.GlutenFree
             };
 
@@ -160,17 +160,17 @@
         {
             //Arrange
             DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             await using ApplicationDbContext dbContext = new ApplicationDbContext(options);
 
             ProductRepository productRepository = new ProductRepository(dbContext);
             ProductService productService = new ProductService(productRepository);
-            
+
             //Act
             ProductDetailsViewModel? result = await productService.GetDetailsAsync(999);
-            
+
             //Assert
             Assert.Null(result);
         }
@@ -180,7 +180,7 @@
         {
             //Arrange 
             DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                  .Options;
 
             await using ApplicationDbContext dbContext = new ApplicationDbContext(options);
@@ -225,7 +225,7 @@
         {
             //Arrange
             DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                  .Options;
 
             await using ApplicationDbContext dbContext = new ApplicationDbContext(options);
@@ -255,7 +255,7 @@
         {
             //Arrange
             DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                  .Options;
 
             await using ApplicationDbContext dbContext = new ApplicationDbContext(options);
@@ -322,7 +322,7 @@
         {
             //Arrange 
             DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             await using ApplicationDbContext dbContext = new ApplicationDbContext(options);
@@ -361,7 +361,7 @@
         public async Task EditAsync_ShouldReturnFalse_WhenCategoryDoesNotExist()
         {
             DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             await using ApplicationDbContext dbContext = new ApplicationDbContext(options);
@@ -413,6 +413,91 @@
             Assert.Equal("Old Description", unchangedProduct.Description);
             Assert.Equal(10, unchangedProduct.Price);
             Assert.Equal(1, unchangedProduct.CategoryId);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ShouldReturnTrue_WhenProductIsDeletedSuccessfully()
+        {
+            //Arrange
+            DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
+
+            await using ApplicationDbContext dbContext = new ApplicationDbContext(options);
+
+            Product product = new Product
+            {
+                ProductId = 1,
+                Name = "Cake",
+                Price = 10,
+                CategoryId = 1,
+            };
+
+            await dbContext.Products.AddAsync(product);
+            await dbContext.SaveChangesAsync();
+
+            ProductRepository productRepository = new ProductRepository(dbContext);
+            ProductService productService = new ProductService(productRepository);
+
+            //Act
+            bool result = await productService.DeleteAsync(1);
+
+            //Assert
+            Assert.True(result);
+            Assert.Empty(dbContext.Products);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ShouldReturnFalse_WhenProductIsUsedInOrders()
+        {
+            //Arrange
+            DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
+
+            await using ApplicationDbContext dbContext = new ApplicationDbContext(options);
+
+            Product product = new Product
+            {
+                ProductId = 1,
+                Name = "Cake",
+                Price = 10,
+                CategoryId = 1,
+            };
+
+            OrderRequest orderRequest = new OrderRequest
+            {
+                OrderRequestId = 1,
+                CustomerName = "Test User",
+                PhoneNumber = "123456789",
+                PickupDate = DateTime.UtcNow.AddDays(1),
+                Status = OrderStatus.Pending,
+                UserId = "user-1"
+            };
+
+            OrderItem orderItem = new OrderItem
+            {
+                OrderItemId = 1,
+                OrderRequestId = 1,
+                ProductId = 1,
+                Quantity = 2,
+                UnitPrice = 10
+            };
+
+            await dbContext.Products.AddAsync(product);
+            await dbContext.OrderRequests.AddAsync(orderRequest);
+            await dbContext.OrderItems.AddAsync(orderItem);
+            await dbContext.SaveChangesAsync();
+
+            ProductRepository productRepository = new ProductRepository(dbContext);
+            ProductService productService = new ProductService(productRepository);
+
+            //Act
+            bool result = await productService.DeleteAsync(1);
+
+            //Assert
+            Assert.False(result);
+            Assert.Single(dbContext.Products);
         }
     }
 }
