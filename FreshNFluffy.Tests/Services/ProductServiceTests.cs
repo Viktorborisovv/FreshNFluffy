@@ -9,11 +9,13 @@
     using FreshNFluffy.Data.Repository;
 
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.AspNetCore.Identity;
+    using FreshNFluffy.Data.Models.Enum;
 
     public class ProductServiceTests
     {
         [Fact]
-        public async Task GetTaskAsync_ShouldReturnPagedProductsAndCategories()
+        public async Task GetAllAsync_ShouldReturnPagedProductsAndCategories()
         {
             //Arrange
             DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -77,6 +79,100 @@
             Assert.Equal(2, result.Products.Count());
             Assert.Equal("Chocolate Cake", result.Products.First().Name);
             Assert.Equal("Red Velvet Cake", result.Products.Last().Name);
+        }
+
+        [Fact]
+        public async Task GetDetailsAsync_ShouldReturnProduct_WhenExists()
+        {
+            //Arrange
+
+            DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+
+            await using ApplicationDbContext dbContext = new ApplicationDbContext(options);
+
+            Category category = new Category
+            {
+                CategoryId = 1,
+                Name = "Cakes",
+            };
+
+            IdentityUser user = new IdentityUser
+            {
+                Id = "user-1",
+                UserName = "testuser",
+            };
+
+            Product product = new Product
+            {
+                ProductId = 1,
+                Name = "Chocolate Cake",
+                Description = "Rich chocolate cake",
+                Price = 12.50m,
+                CategoryId = 1,
+                Category = category, 
+                NutritionTypes = NutritionTypes.GlutenFree
+            };
+
+            Review review = new Review
+            {
+                ReviewId = 1,
+                ProductId = 1,
+                Product = product,
+                UserId = "user-1",
+                User = user,
+                Rating = 5,
+                Comment = "Amazing!",
+                CreatedOn = new DateTime(2026, 3, 31)
+            };
+
+            await dbContext.Categories.AddAsync(category);
+            await dbContext.Users.AddAsync(user);
+            await dbContext.Products.AddAsync(product);
+            await dbContext.Reviews.AddAsync(review);
+            await dbContext.SaveChangesAsync();
+
+            ProductRepository productRepository = new ProductRepository(dbContext);
+            ProductService productService = new ProductService(productRepository);
+
+            //Act
+            ProductDetailsViewModel? result = await productService.GetDetailsAsync(1);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Equal(1, result!.ProductId);
+            Assert.Equal("Chocolate Cake", result.Name);
+            Assert.Equal("Rich chocolate cake", result.Description);
+            Assert.Equal(12.50m, result.Price);
+            Assert.Equal("Cakes", result.CategoryName);
+            Assert.Equal("GlutenFree", result.NutritionText);
+
+            Assert.Single(result.Reviews);
+            Assert.Equal("Amazing!", result.Reviews.First().Comment);
+
+            Assert.NotNull(result.NewReview);
+            Assert.Equal(1, result.NewReview.ProductId);
+        }
+
+        [Fact]
+        public async Task GetDetailsAsync_ShouldReturnNull_WhenProductDoesNotExist()
+        {
+            //Arrange
+            DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+
+            await using ApplicationDbContext dbContext = new ApplicationDbContext(options);
+
+            ProductRepository productRepository = new ProductRepository(dbContext);
+            ProductService productService = new ProductService(productRepository);
+            
+            //Act
+            ProductDetailsViewModel? result = await productService.GetDetailsAsync(999);
+            
+            //Assert
+            Assert.Null(result);
         }
 
         [Fact]
