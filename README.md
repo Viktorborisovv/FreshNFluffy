@@ -1,59 +1,151 @@
 # FreshNFluffy 🍰
-FreshNFluffy is a demo ASP.NET Core MVC web application for a bakery.  
-Users can browse products, create order requests, add items, and track order status in a clean “glass UI” design.
+
+FreshNFluffy is a demo **ASP.NET Core MVC** web application for a bakery.
+It allows users to browse products, create orders, and manage them through a structured workflow, all wrapped in a modern **glass UI design**.
 
 ---
 
-## ✨ Features
-- **Products**
-  - Create, edit, delete, view details
-  - Product image support (with placeholder when missing)
-  - Filtering by **category**, **nutrition type**, and **search**
-- **Order Requests**
-  - Create an order request (customer + pickup date/time + notes)
-  - Add/remove items and update quantities
-  - Order status workflow: **Pending → Confirmed → Ready → Completed** (+ Cancelled)
-  - Manage Orders page with filtering + search
-- **Authentication**
-  - ASP.NET Core **Identity** enabled (Register / Login / Logout)
+## 🚀 Features
+
+### 🛍️ Product Management
+
+* Create, edit, delete, and view products
+* Image support with fallback placeholder
+* Advanced filtering:
+
+  * Category
+  * Nutrition types (Flags enum)
+  * Search
 
 ---
 
-## 🛠 Tech Stack
-| Technology            | Version | Purpose                    |
-|-----------------------|---------|----------------------------|
-| ASP.NET Core MVC      | 8.0     | Web framework              |
-| Entity Framework Core | 8.0     | ORM / Database access      |
-| SQL Server (LocalDB)  | -       | Database                   |
-| ASP.NET Core Identity | 8.0     | Authentication             |
-| Bootstrap             | 5       | Frontend styling           |
-| Razor Views           | -       | Server-side rendering      |
+### 📦 Order Management
+
+* Create order requests
+* Add / remove items
+* Update quantities
+* Order workflow:
+  **Pending → Confirmed → Ready → Completed (+ Cancelled)**
+* Business rules validation
+* Automatic total price calculation
 
 ---
 
+### 🛠️ Admin Area
 
-## 🚀 Getting Started (Local Setup)
+* Dedicated Admin panel (Area-based architecture)
+* Manage all orders in one place
+* Filtering and searching capabilities
 
-### 1) Prerequisites
-- **.NET SDK** (recommended: .NET 8)
-- **SQL Server** (Docker / local instance)
-- (Optional) **Visual Studio 2022** / VS Code
+---
 
-### 2) Clone the repository
+### ⭐ Reviews System
+
+* Add reviews to products
+* View reviews per product
+* Sorted by latest
+
+---
+
+### 🔐 Authentication & Authorization
+
+* ASP.NET Core Identity
+* Register / Login / Logout
+* Role-based access control (**Admin / User**)
+
+---
+
+## 🧠 Architecture
+
+The project follows a **clean layered architecture**:
+
+**Controllers → Services → Repositories → Data**
+
+### Key Design Principles:
+
+* ✔️ Repository Pattern
+* ✔️ Service Layer (business logic separation)
+* ✔️ Dependency Injection
+* ✔️ ViewModels (no direct entity exposure)
+* ✔️ Enum-driven workflows
+* ✔️ LINQ query composition
+
+---
+
+## 🧪 Testing
+
+Unit tests are implemented using:
+
+* ✔️ xUnit
+* ✔️ EF Core InMemory Provider
+
+### Coverage:
+
+* ✅ 65%+ Line Coverage
+
+### Tested Components:
+
+* ProductService
+* OrderService (complex workflow logic)
+* ReviewService
+
+### Focus:
+
+* Business logic validation
+* Edge cases
+* Guard clauses
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology              | Version | Purpose                        |
+| ----------------------- | ------- | ------------------------------ |
+| ASP.NET Core MVC        | 8.0     | Web framework                  |
+| Entity Framework Core   | 8.0     | ORM / Database access          |
+| SQL Server (Docker)     | -       | Database                       |
+| Docker & Docker Compose | -       | Containerization               |
+| ASP.NET Core Identity   | 8.0     | Authentication & Authorization |
+| Bootstrap               | 5       | Frontend styling               |
+| Razor Views             | -       | Server-side rendering          |
+| xUnit                   | -       | Unit testing                   |
+
+---
+
+## ⚙️ Getting Started
+
+### 1️⃣ Prerequisites
+
+* .NET 8 SDK
+* Docker (for SQL Server)
+* Visual Studio 2022 / VS Code (optional)
+
+---
+
+### 2️⃣ Clone the repository
+
 ```bash
 git clone https://github.com/Viktorborisovv/FreshNFluffy.git
 cd FreshNFluffy
+```
 
-Restore dependencies:
+---
+
+### 3️⃣ Restore dependencies
+
+```bash
 dotnet restore
+```
 
-3) 🗄️ Database Setup (Recommended: Docker SQL Server):
-Start SQL Server container:
-cd BakaryProject2026   # repo root where docker-compose.yml is
+---
+
+### 4️⃣ Database Setup (Docker SQL Server)
+
+```bash
 docker compose up -d
-The repository includes `appsettings.json` with a placeholder connection string.
+```
 
-Create **locally** an `appsettings.Development.json` (this file is ignored by git) and put your real SQL Server credentials:
+Create `appsettings.Development.json`:
 
 ```json
 {
@@ -61,66 +153,102 @@ Create **locally** an `appsettings.Development.json` (this file is ignored by gi
     "DefaultConnection": "Server=localhost,1433;Database=FreshNFluffyDb;User Id=sa;Password=YourPasswordHere;TrustServerCertificate=True;Encrypt=False;MultipleActiveResultSets=True"
   }
 }
+```
 
-4) Run migrations using Development environment:
+---
+
+### 5️⃣ Apply migrations
+
+```bash
 $env:ASPNETCORE_ENVIRONMENT="Development"
 dotnet ef database update --project ./FreshNFluffy/FreshNFluffy.csproj --startup-project ./FreshNFluffy/FreshNFluffy.csproj
+```
 
-5) Run the app:
+---
+
+### 6️⃣ Run the application
+
+```bash
 dotnet run --project ./FreshNFluffy/FreshNFluffy.csproj
+```
 
-Then open the shown URL (example):
+Open:
+
+```
 https://localhost:7249
+```
 
-💻 Usage
+---
 
-1. Register and log in.
-2. Go to Products and add products (images optional).
-3. Go to Order Request to create a new order.
-4. Add items and set pickup date/time.
-5. Open Orders to manage status and view details.
+## 💻 Usage
 
-📁 Project Structure
+1. Register and log in
+2. Browse or create products
+3. Create an order request
+4. Add items and set pickup time
+5. Manage order status
+
+---
+
+## 📁 Project Structure
+
+```
 FreshNFluffy/
+├── Areas/Admin
+├── Controllers
+├── Data
+│   ├── Models
+│   ├── Repository
+│   ├── Migrations
+│   └── Seeding
+├── Services
+├── ViewModels
+├── Views
+├── wwwroot
+└── Program.cs
+```
 
-├── Controllers -> MVC Controllers
-├── Data -> DbContext and EF Core migrations
-├── Models -> Domain models
-├── Services -> Business logic / service layer
-├── ViewModels -> ViewModels used by views
-├── Views -> Razor Views (.cshtml)
-├── wwwroot -> Static files (CSS, JS, images)
-├── appsettings.json -> App configuration
-└── Program.cs -> App entry point / middleware
+---
 
-Recommended:
-Use images in JPG/PNG
-Wide images work best (e.g. 1200x800), but any size is acceptable.
+## 🔐 Security
 
-🔐 Authentication (Identity)
-The project uses ASP.NET Core Identity for registration and login.
-Note: Role management (Admin/User) is not required for this demo version (can be extended later).
+* Authentication via ASP.NET Core Identity
+* Role-based authorization (Admin / User)
+* Protection against unauthorized actions
 
-📄 Privacy
-FreshNFluffy is a demo project. It stores only what is needed for order processing:
+---
 
-Customer name & phone
-Pickup date/time
-Order items and quantities
-Optional notes
+## 📄 Privacy
 
-✅ Project Status
-This project is ready for submission as a complete demo MVC application:
+This is a demo project. It stores only:
 
-Clean UI
-Working CRUD
-Working order workflow
-Database + migrations
-Identity login/register
+* Customer name & phone
+* Pickup date/time
+* Order items
+* Optional notes
 
-📄 License
-This project is licensed under the MIT License. See LICENSE for details.
+---
 
-📬 Contact
-Viktor Borisov – vsborisov7@gmail.com
-Project Link: https://github.com/Viktorborisovv/FreshNFluffy
+## ✅ Project Status
+
+✔️ Fully functional MVC application
+✔️ Clean architecture
+✔️ Role-based security
+✔️ Database & migrations
+✔️ Unit testing coverage
+
+---
+
+## 📄 License
+
+MIT License
+
+---
+
+## 📬 Contact
+
+**Viktor Borisov**
+📧 [vsborisov7@gmail.com](mailto:vsborisov7@gmail.com)
+
+🔗 GitHub:
+https://github.com/Viktorborisovv/FreshNFluffy
